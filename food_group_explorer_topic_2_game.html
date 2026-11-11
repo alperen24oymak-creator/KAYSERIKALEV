@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Group Explorer: Protein, Carbs, Grains, Fruits & Veggies!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #fde68a 0%, #a7f3d0 50%, #bfdbfe 100%);
+            min-height: 100vh;
+            user-select: none;
+        }
+        .bounce-in {
+            animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+            40%, 60% { transform: translate3d(8px, 0, 0); }
+        }
+        .float-anim {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .option-btn {
+            transition: all 0.2s ease;
+            box-shadow: 0 6px 0 #cbd5e1;
+        }
+        .option-btn:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #cbd5e1;
+        }
+        .option-correct {
+            background-color: #4ade80 !important;
+            border-color: #16a34a !important;
+            color: white !important;
+            box-shadow: 0 6px 0 #15803d !important;
+        }
+        .option-wrong {
+            background-color: #f87171 !important;
+            border-color: #dc2626 !important;
+            color: white !important;
+            box-shadow: 0 6px 0 #b91c1c !important;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <!-- Game Container -->
+    <div id="game-app" class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border-4 border-emerald-500 overflow-hidden relative">
+
+        <!-- START SCREEN -->
+        <div id="start-screen" class="p-8 text-center flex flex-col items-center justify-center space-y-6">
+            <div class="text-6xl md:text-7xl float-anim">🥩🍞🌾🍎🥦</div>
+            <h1 class="text-4xl md:text-5xl font-bold text-emerald-600 tracking-wide">Food Group Island!</h1>
+            <p class="text-lg text-gray-600 font-medium max-w-md">
+                Welcome to Topic 2! Help Captain Crunch sort the foods into the 5 Super Food Groups: <span class="text-red-500 font-bold">Protein</span>, <span class="text-amber-600 font-bold">Carbs</span>, <span class="text-yellow-600 font-bold">Grains</span>, <span class="text-pink-500 font-bold">Fruits</span>, and <span class="text-green-600 font-bold">Vegetables</span>!
+            </p>
+            
+            <!-- Mini Guide for A1 Students -->
+            <div class="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200 w-full max-w-lg text-left space-y-2 text-sm md:text-base">
+                <p class="font-bold text-emerald-800 text-center text-lg mb-2">🗺️ Island Secret Guide:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div class="bg-white p-2 rounded-xl border border-emerald-100">🥩 <strong>Protein:</strong> Meat, chicken, fish, eggs (For strong muscles!)</div>
+                    <div class="bg-white p-2 rounded-xl border border-emerald-100">🍝 <strong>Carbs:</strong> Pasta, potatoes, bread (For fast energy!)</div>
+                    <div class="bg-white p-2 rounded-xl border border-emerald-100">🌾 <strong>Grains:</strong> Rice, oats, wheat, cereal (Seeds from plants!)</div>
+                    <div class="bg-white p-2 rounded-xl border border-emerald-100">🍎 <strong>Fruits & 🥦 Veggies:</strong> Apples, broccoli (Full of vitamins!)</div>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-2xl font-bold py-4 px-10 rounded-2xl shadow-[0_6px_0_#047857] active:translate-y-1 active:shadow-[0_2px_0_#047857] transition-all cursor-pointer">
+                🏝️ START ADVENTURE!
+            </button>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quiz-screen" class="hidden flex-col">
+            <!-- Top HUD -->
+            <div class="bg-emerald-600 text-white p-4 flex justify-between items-center">
+                <!-- Hearts -->
+                <div class="flex items-center space-x-1" id="hearts-container">
+                    <span class="text-2xl">❤️</span>
+                    <span class="text-2xl">❤️</span>
+                    <span class="text-2xl">❤️</span>
+                </div>
+
+                <!-- Level Progress -->
+                <div class="bg-emerald-800 px-4 py-1.5 rounded-full text-sm md:text-base font-bold border border-emerald-400">
+                    Island <span id="q-current">1</span> / <span id="q-total">12</span>
+                </div>
+
+                <!-- Score & Streak -->
+                <div class="flex items-center space-x-3">
+                    <div id="streak-badge" class="hidden bg-orange-500 text-white px-2.5 py-1 rounded-full text-xs font-bold animate-bounce">
+                        🔥 <span id="streak-count">0</span>x
+                    </div>
+                    <div class="bg-yellow-400 text-emerald-950 px-3 py-1 rounded-xl font-bold text-lg flex items-center space-x-1 shadow-inner">
+                        <span>⭐</span>
+                        <span id="score-display">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-emerald-100 h-3">
+                <div id="progress-bar" class="bg-amber-400 h-3 transition-all duration-300" style="width: 8%;"></div>
+            </div>
+
+            <!-- Main Question Area -->
+            <div class="p-6 md:p-8 flex flex-col items-center">
+                <!-- Category Badge -->
+                <div class="flex items-center space-x-2 bg-amber-100 text-amber-800 px-4 py-1.5 rounded-full text-sm font-bold mb-4 border border-amber-300">
+                    <span id="q-badge-icon">🧭</span>
+                    <span id="q-badge-text">Food Group Mission</span>
+                </div>
+
+                <!-- Big Emoji Visual -->
+                <div id="q-emoji" class="text-6xl md:text-7xl mb-4 float-anim">🥩🍗</div>
+
+                <!-- Question Text -->
+                <h2 id="q-text" class="text-xl md:text-2xl font-bold text-gray-800 text-center mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <!-- Answer Options Grid -->
+                <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                    <!-- Options injected via JS -->
+                </div>
+
+                <!-- Instant Feedback Box -->
+                <div id="feedback-box" class="hidden w-full mt-6 p-5 rounded-2xl border-4 bounce-in">
+                    <div class="flex items-start space-x-4">
+                        <div id="fb-icon" class="text-4xl">🎉</div>
+                        <div class="flex-1">
+                            <h3 id="fb-title" class="text-xl font-bold mb-1">Awesome!</h3>
+                            <p id="fb-correct-ans" class="text-sm font-bold mb-1 hidden"></p>
+                            <p id="fb-explanation" class="text-base font-medium leading-relaxed"></p>
+                        </div>
+                    </div>
+                    <button onclick="nextQuestion()" class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow-[0_4px_0_#065f46] active:translate-y-1 transition-all text-lg cursor-pointer">
+                        Next Island ➡️
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- END SCREEN -->
+        <div id="end-screen" class="hidden p-8 text-center flex-col items-center justify-center space-y-6">
+            <div id="end-trophy" class="text-8xl bounce-in">🏆</div>
+            <h1 id="end-title" class="text-4xl font-bold text-emerald-600">Island Conquered!</h1>
+            <p id="end-subtitle" class="text-xl text-gray-600 font-medium">You know all the 5 Food Groups!</p>
+
+            <!-- Stats Box -->
+            <div class="grid grid-cols-3 gap-4 w-full max-w-md bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200">
+                <div class="flex flex-col items-center">
+                    <span class="text-sm text-gray-500 font-bold">SCORE</span>
+                    <span id="final-score" class="text-2xl md:text-3xl font-bold text-emerald-600">0</span>
+                </div>
+                <div class="flex flex-col items-center border-x border-emerald-200">
+                    <span class="text-sm text-gray-500 font-bold">CORRECT</span>
+                    <span id="final-correct" class="text-2xl md:text-3xl font-bold text-green-600">0/12</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-sm text-gray-500 font-bold">RANK</span>
+                    <span id="final-rank" class="text-xl md:text-2xl font-bold text-amber-500">🌟 Explorer</span>
+                </div>
+            </div>
+
+            <!-- Summary Review Board -->
+            <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 w-full max-w-lg text-left">
+                <p class="font-bold text-amber-900 text-center mb-2">📚 5 Food Groups Cheat Sheet:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs md:text-sm font-semibold">
+                    <div class="bg-red-100 text-red-900 px-3 py-1.5 rounded-lg">🥩 <strong>Protein:</strong> Meat, Chicken, Fish, Eggs</div>
+                    <div class="bg-orange-100 text-orange-900 px-3 py-1.5 rounded-lg">🍝 <strong>Carbs:</strong> Pasta, Potatoes, Bread</div>
+                    <div class="bg-yellow-100 text-yellow-900 px-3 py-1.5 rounded-lg">🌾 <strong>Grains:</strong> Rice, Oats, Cereal, Wheat</div>
+                    <div class="bg-pink-100 text-pink-900 px-3 py-1.5 rounded-lg">🍎 <strong>Fruits:</strong> Apple, Banana, Strawberry</div>
+                    <div class="bg-green-100 text-green-900 px-3 py-1.5 rounded-lg sm:col-span-2 text-center">🥦 <strong>Vegetables:</strong> Broccoli, Carrot, Spinach, Cucumber</div>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xl font-bold py-4 px-8 rounded-2xl shadow-[0_6px_0_#065f46] active:translate-y-1 transition-all cursor-pointer">
+                🔄 Play Again!
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Web Audio API Sound Effects
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+        }
+
+        function playSound(type) {
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(200, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } else if (type === 'win') {
+                    osc.type = 'triangle';
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.12);
+                    });
+                    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.6);
+                }
+            } catch (e) {}
+        }
+
+        // 12 Gamified Questions for 5th Grade A1 Level: Topic 2 (Food Groups: Protein, Carbs, Grains, Fruits, Vegetables)
+        const questions = [
+            {
+                badgeIcon: "💪",
+                badgeText: "Island 1: Muscle Beach",
+                emoji: "🥩🍗🐟🥚",
+                question: "Meat, chicken, fish, and eggs make our muscles strong. Which food group are they in?",
+                options: [
+                    { text: "🥩 Protein", isCorrect: true },
+                    { text: "🍎 Fruits", isCorrect: false },
+                    { text: "🥦 Vegetables", isCorrect: false },
+                    { text: "🌾 Grains", isCorrect: false }
+                ],
+                simpleExplanation: "Meat, chicken, fish, and eggs are in the PROTEIN group! Protein builds strong muscles and helps your body grow."
+            },
+            {
+                badgeIcon: "⚡",
+                badgeText: "Island 2: Energy Mountain",
+                emoji: "🍝🥔🍞",
+                question: "Pasta, potatoes, and bread give us fast energy to run and play! What food group are they?",
+                options: [
+                    { text: "🍝 Carbs (Carbohydrates)", isCorrect: true },
+                    { text: "🥩 Protein", isCorrect: false },
+                    { text: "🍎 Fruits", isCorrect: false },
+                    { text: "🥦 Vegetables", isCorrect: false }
+                ],
+                simpleExplanation: "Pasta, potatoes, and bread are CARBS (Carbohydrates). Carbs give your body quick energy to run, study, and play!"
+            },
+            {
+                badgeIcon: "🌾",
+                badgeText: "Island 3: Golden Fields",
+                emoji: "🍚🌾🥣",
+                question: "Rice, oats, wheat, and breakfast cereal come from plant seeds. Which food group are they?",
+                options: [
+                    { text: "🌾 Grains", isCorrect: true },
+                    { text: "🥩 Protein", isCorrect: false },
+                    { text: "🥦 Vegetables", isCorrect: false },
+                    { text: "🍓 Fruits", isCorrect: false }
+                ],
+                simpleExplanation: "Rice, oats, wheat, and cereal are GRAINS! Grains are small, healthy seeds that come from farm plants."
+            },
+            {
+                badgeIcon: "🍓",
+                badgeText: "Island 4: Sweet Jungle",
+                emoji: "🍎🍌🍉🍇",
+                question: "Apples, bananas, watermelon, and grapes are sweet and full of vitamins. Which group are they in?",
+                options: [
+                    { text: "🍎 Fruits", isCorrect: true },
+                    { text: "🥦 Vegetables", isCorrect: false },
+                    { text: "🥩 Protein", isCorrect: false },
+                    { text: "🍝 Carbs", isCorrect: false }
+                ],
+                simpleExplanation: "Apples, bananas, watermelon, and grapes are FRUITS! Fruits grow on trees or plants and taste naturally sweet."
+            },
+            {
+                badgeIcon: "🥦",
+                badgeText: "Island 5: Green Valley",
+                emoji: "🥦🥕🥒🥬",
+                question: "Broccoli, carrots, cucumber, and spinach are in the ________ group.",
+                options: [
+                    { text: "🥦 Vegetables", isCorrect: true },
+                    { text: "🍎 Fruits", isCorrect: false },
+                    { text: "🌾 Grains", isCorrect: false },
+                    { text: "🥩 Protein", isCorrect: false }
+                ],
+                simpleExplanation: "Broccoli, carrots, cucumber, and spinach are VEGETABLES! Vegetables have lots of vitamins to keep you healthy."
+            },
+            {
+                badgeIcon: "🕵️‍♂️",
+                badgeText: "Island 6: Protein Detective",
+                emoji: "🍽️❓",
+                question: "Chef Leo wants to cook a PROTEIN food for dinner. Which food should he choose?",
+                options: [
+                    { text: "🐟 Grilled fish", isCorrect: true },
+                    { text: "🍎 Red apple", isCorrect: false },
+                    { text: "🥒 Green cucumber", isCorrect: false },
+                    { text: "🍚 White rice", isCorrect: false }
+                ],
+                simpleExplanation: "Fish is a PROTEIN food! Apple is a fruit, cucumber is a vegetable, and rice is a grain/carb."
+            },
+            {
+                badgeIcon: "🏃‍♀️",
+                badgeText: "Island 7: Marathon Runner",
+                emoji: "⚽🏃‍♂️",
+                question: "Zeynep has a big football match today. She needs CARBS for energy! What should she eat?",
+                options: [
+                    { text: "🍝 A bowl of pasta", isCorrect: true },
+                    { text: "🥬 Green spinach", isCorrect: false },
+                    { text: "🥩 A piece of steak", isCorrect: false },
+                    { text: "🍓 Fresh strawberries", isCorrect: false }
+                ],
+                simpleExplanation: "Pasta is full of CARBS! Eating pasta, bread, or potatoes before sports gives you lots of running energy."
+            },
+            {
+                badgeIcon: "🥣",
+                badgeText: "Island 8: Breakfast Farm",
+                emoji: "🌾🍞🍚",
+                question: "Which list has ONLY foods from the GRAINS group?",
+                options: [
+                    { text: "🌾 Rice, oats, wheat, and corn", isCorrect: true },
+                    { text: "🥩 Meat, chicken, fish, and eggs", isCorrect: false },
+                    { text: "🍎 Apple, orange, peach, and pear", isCorrect: false },
+                    { text: "🥦 Broccoli, carrot, onion, and pea", isCorrect: false }
+                ],
+                simpleExplanation: "Rice, oats, wheat, and corn are all GRAINS! We use grains to make bread, cereal, and flour."
+            },
+            {
+                badgeIcon: "🔍",
+                badgeText: "Island 9: Odd One Out!",
+                emoji: "🥦🥕🍗🥒",
+                question: "Look at the foods: Broccoli, Carrot, Chicken, Cucumber. Which one is NOT a vegetable?",
+                options: [
+                    { text: "🍗 Chicken (It is Protein!)", isCorrect: true },
+                    { text: "🥦 Broccoli", isCorrect: false },
+                    { text: "🥕 Carrot", isCorrect: false },
+                    { text: "🥒 Cucumber", isCorrect: false }
+                ],
+                simpleExplanation: "Chicken is NOT a vegetable! Chicken comes from an animal, so it is in the PROTEIN group. Broccoli, carrot, and cucumber are vegetables."
+            },
+            {
+                badgeIcon: "🥚",
+                badgeText: "Island 10: Morning Egg",
+                emoji: "🍳🫘🥜",
+                question: "Ali doesn't eat meat, so he eats eggs, beans, and nuts. Which food group are eggs, beans, and nuts in?",
+                options: [
+                    { text: "🥩 Protein", isCorrect: true },
+                    { text: "🍎 Fruits", isCorrect: false },
+                    { text: "🍝 Carbs", isCorrect: false },
+                    { text: "🥦 Vegetables", isCorrect: false }
+                ],
+                simpleExplanation: "Eggs, beans, and nuts are also in the PROTEIN group! You can get protein from both animals (meat/eggs) and plants (beans/nuts)."
+            },
+            {
+                badgeIcon: "🥗",
+                badgeText: "Island 11: Fruit vs. Veggie",
+                emoji: "🍑🍐🧅🍊",
+                question: "Look at the basket: Peach, Pear, Onion, Orange. Which one is a VEGETABLE, not a fruit?",
+                options: [
+                    { text: "🧅 Onion", isCorrect: true },
+                    { text: "🍑 Peach", isCorrect: false },
+                    { text: "🍐 Pear", isCorrect: false },
+                    { text: "🍊 Orange", isCorrect: false }
+                ],
+                simpleExplanation: "An onion is a VEGETABLE used in cooking and salads! Peach, pear, and orange are sweet FRUITS."
+            },
+            {
+                badgeIcon: "👑",
+                badgeText: "Final Boss: The Super Plate!",
+                emoji: "🍱✨",
+                question: "Match the food to its correct group: 'Chicken is ______, Rice is a ______, and Apple is a ______.'",
+                options: [
+                    { text: "🥩 Protein / 🌾 Grain / 🍎 Fruit", isCorrect: true },
+                    { text: "🍎 Fruit / 🥩 Protein / 🥦 Vegetable", isCorrect: false },
+                    { text: "🥦 Vegetable / 🍎 Fruit / 🌾 Grain", isCorrect: false },
+                    { text: "🌾 Grain / 🥦 Vegetable / 🥩 Protein", isCorrect: false }
+                ],
+                simpleExplanation: "Chicken = PROTEIN (for muscles), Rice = GRAIN/CARB (for energy), and Apple = FRUIT (for vitamins)!"
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+        let hearts = 3;
+        let streak = 0;
+        let correctCount = 0;
+
+        function startGame() {
+            currentQIndex = 0;
+            score = 0;
+            hearts = 3;
+            streak = 0;
+            correctCount = 0;
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('flex');
+            
+            const quizScreen = document.getElementById('quiz-screen');
+            quizScreen.classList.remove('hidden');
+            quizScreen.classList.add('flex');
+
+            updateHUD();
+            loadQuestion();
+        }
+
+        function updateHUD() {
+            const heartsContainer = document.getElementById('hearts-container');
+            heartsContainer.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                const heart = document.createElement('span');
+                heart.className = 'text-2xl transition-transform duration-300';
+                heart.textContent = i < hearts ? '❤️' : '🖤';
+                heartsContainer.appendChild(heart);
+            }
+
+            document.getElementById('q-current').textContent = currentQIndex + 1;
+            document.getElementById('q-total').textContent = questions.length;
+            const progressPercent = ((currentQIndex + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            document.getElementById('score-display').textContent = score;
+            const streakBadge = document.getElementById('streak-badge');
+            if (streak >= 2) {
+                streakBadge.classList.remove('hidden');
+                document.getElementById('streak-count').textContent = streak;
+            } else {
+                streakBadge.classList.add('hidden');
+            }
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQIndex];
+            document.getElementById('q-badge-icon').textContent = q.badgeIcon;
+            document.getElementById('q-badge-text').textContent = q.badgeText;
+            document.getElementById('q-emoji').textContent = q.emoji;
+            document.getElementById('q-text').textContent = q.question;
+
+            const fbBox = document.getElementById('feedback-box');
+            fbBox.classList.add('hidden');
+
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+
+            shuffledOptions.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn bg-white hover:bg-emerald-50 text-gray-800 font-bold text-lg py-4 px-5 rounded-2xl border-2 border-slate-300 text-left flex items-center justify-between cursor-pointer';
+                btn.innerHTML = `<span>${opt.text}</span>`;
+                btn.onclick = () => selectAnswer(btn, opt, shuffledOptions);
+                grid.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedBtn, selectedOpt, allOptions) {
+            const q = questions[currentQIndex];
+            const buttons = document.getElementById('options-grid').children;
+
+            for (let btn of buttons) {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-emerald-50', 'cursor-pointer');
+            }
+
+            const fbBox = document.getElementById('feedback-box');
+            const fbIcon = document.getElementById('fb-icon');
+            const fbTitle = document.getElementById('fb-title');
+            const fbCorrectAns = document.getElementById('fb-correct-ans');
+            const fbExplanation = document.getElementById('fb-explanation');
+
+            const correctOption = allOptions.find(o => o.isCorrect);
+
+            for (let i = 0; i < buttons.length; i++) {
+                if (allOptions[i].isCorrect) {
+                    buttons[i].classList.add('option-correct');
+                    buttons[i].innerHTML += ` <span>✅</span>`;
+                }
+            }
+
+            if (selectedOpt.isCorrect) {
+                playSound('correct');
+                streak++;
+                correctCount++;
+                const bonus = streak >= 2 ? 50 : 0;
+                score += 100 + bonus;
+
+                fbBox.className = 'w-full mt-6 p-5 rounded-2xl border-4 bg-green-50 border-green-400 text-green-900 bounce-in block';
+                fbIcon.textContent = '🎉';
+                fbTitle.textContent = streak >= 2 ? `Super Combo! +${100 + bonus} Points! 🔥` : 'Awesome Job! +100 Points! ⭐';
+                fbTitle.className = 'text-xl font-bold mb-1 text-green-700';
+                fbCorrectAns.classList.add('hidden');
+                fbExplanation.textContent = `💡 Why? ${q.simpleExplanation}`;
+            } else {
+                playSound('wrong');
+                selectedBtn.classList.add('option-wrong', 'shake');
+                selectedBtn.innerHTML += ` <span>❌</span>`;
+                streak = 0;
+                if (hearts > 0) hearts--;
+
+                fbBox.className = 'w-full mt-6 p-5 rounded-2xl border-4 bg-red-50 border-red-400 text-red-900 bounce-in block';
+                fbIcon.textContent = '💡';
+                fbTitle.textContent = 'Oops! Let\'s learn this one!';
+                fbTitle.className = 'text-xl font-bold mb-1 text-red-700';
+                
+                fbCorrectAns.classList.remove('hidden');
+                fbCorrectAns.className = 'text-base font-bold mb-2 bg-green-200 text-green-900 inline-block px-3 py-1 rounded-lg';
+                fbCorrectAns.innerHTML = `✅ Correct Answer: ${correctOption.text}`;
+                
+                fbExplanation.textContent = `Simple Rule: ${q.simpleExplanation}`;
+            }
+
+            updateHUD();
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < questions.length) {
+                updateHUD();
+                loadQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            playSound('win');
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('flex');
+
+            const endScreen = document.getElementById('end-screen');
+            endScreen.classList.remove('hidden');
+            endScreen.classList.add('flex');
+
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('final-correct').textContent = `${correctCount}/${questions.length}`;
+
+            let rank = "🌱 Island Visitor";
+            let trophy = "🥉";
+            if (correctCount >= 10) {
+                rank = "👑 Food Group Master";
+                trophy = "🏆";
+            } else if (correctCount >= 7) {
+                rank = "⭐ Island Explorer";
+                trophy = "🥈";
+            }
+            document.getElementById('final-rank').textContent = rank;
+            document.getElementById('end-trophy').textContent = trophy;
+        }
+    </script>
+</body>
+</html>

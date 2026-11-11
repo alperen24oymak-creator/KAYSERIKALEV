@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Chef Kitchen: Recipe Builder!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: radial-gradient(circle at top, #fffbeb 0%, #fed7aa 50%, #fdba74 100%);
+            min-height: 100vh;
+            user-select: none;
+        }
+        /* Checkered Kitchen Tablecloth Pattern */
+        .kitchen-cloth {
+            background-color: #ef4444;
+            background-image: 
+                linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.2) 75%, rgba(255,255,255,0.2)),
+                linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.2) 75%, rgba(255,255,255,0.2));
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+        }
+        .bounce-in {
+            animation: bounceIn 0.45s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.6); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-3px, 0, 0); }
+            20%, 80% { transform: translate3d(5px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+            40%, 60% { transform: translate3d(8px, 0, 0); }
+        }
+        .cook-spin {
+            animation: cookSpin 0.7s ease-in-out;
+        }
+        @keyframes cookSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(15deg) scale(1.25); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+        .float-slow {
+            animation: floatSlow 3s ease-in-out infinite;
+        }
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .tool-card {
+            transition: all 0.2s ease;
+            box-shadow: 0 6px 0 #d97706;
+        }
+        .tool-card:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #d97706;
+        }
+        .card-correct {
+            background-color: #22c55e !important;
+            border-color: #15803d !important;
+            color: white !important;
+            box-shadow: 0 6px 0 #166534 !important;
+        }
+        .card-wrong {
+            background-color: #ef4444 !important;
+            border-color: #b91c1c !important;
+            color: white !important;
+            box-shadow: 0 6px 0 #991b1b !important;
+        }
+        /* Notebook Lined Paper Effect */
+        .recipe-paper {
+            background-color: #fefce8;
+            background-image: linear-gradient(#fde047 1px, transparent 1px);
+            background-size: 100% 2rem;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-3 md:p-6">
+
+    <!-- Main Kitchen Simulator Container -->
+    <div id="game-app" class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl border-4 border-orange-500 overflow-hidden">
+
+        <!-- START SCREEN -->
+        <div id="start-screen" class="p-6 md:p-10 text-center flex flex-col items-center justify-center space-y-6">
+            <div class="kitchen-cloth w-full py-4 rounded-2xl shadow-md flex justify-center items-center space-x-4 text-5xl md:text-6xl">
+                <span class="float-slow">👩‍🍳</span>
+                <span>🔪</span>
+                <span>🥣</span>
+                <span>🍽️</span>
+                <span class="float-slow">📖</span>
+            </div>
+
+            <h1 class="text-3xl md:text-5xl font-bold text-orange-600 tracking-wide">Master Chef: Recipe Builder!</h1>
+            <p class="text-base md:text-lg text-gray-600 font-medium max-w-xl">
+                Welcome to Topic 3! Today you are the Head Chef! Cook <strong>3 delicious dishes</strong> by choosing the right <strong>Order Words</strong> and <strong>Kitchen Actions</strong> to write your own Recipe Book!
+            </p>
+
+            <!-- Secret Chef Dictionary for 5th Grade A1 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl text-left">
+                <!-- Transition Words Box -->
+                <div class="bg-amber-50 p-4 rounded-2xl border-2 border-amber-300">
+                    <h3 class="font-bold text-amber-900 text-lg mb-2 flex items-center gap-2">
+                        <span>🔢</span> 1. Recipe Order Words:
+                    </h3>
+                    <ul class="space-y-1.5 text-sm md:text-base text-gray-700">
+                        <li>🥇 <strong class="text-orange-600">First,</strong> = Step 1 (At the beginning)</li>
+                        <li>🥈 <strong class="text-orange-600">Next, / Then,</strong> = Step 2 (In the middle)</li>
+                        <li>🥉 <strong class="text-orange-600">Later, / After that,</strong> = Step 3 (Before the end)</li>
+                        <li>🏁 <strong class="text-orange-600">Finally,</strong> = Step 4 (The LAST step!)</li>
+                    </ul>
+                </div>
+
+                <!-- Kitchen Verbs & Tools Box -->
+                <div class="bg-orange-50 p-4 rounded-2xl border-2 border-orange-300">
+                    <h3 class="font-bold text-orange-900 text-lg mb-2 flex items-center gap-2">
+                        <span>🔪</span> 2. Chef Words & Tools:
+                    </h3>
+                    <div class="grid grid-cols-2 gap-1.5 text-xs md:text-sm text-gray-700 font-medium">
+                        <div>🔪 <strong>Chop:</strong> Cut into pieces</div>
+                        <div>🎲 <strong>Dice:</strong> Cut into small cubes</div>
+                        <div>➕ <strong>Add:</strong> Put inside</div>
+                        <div>🥄 <strong>Mix:</strong> Stir together</div>
+                        <div>🥣 <strong>Bowl:</strong> Deep round dish</div>
+                        <div>🍽️ <strong>Plate:</strong> Flat dish to serve</div>
+                        <div>🫗 <strong>Pour:</strong> Put liquid in</div>
+                        <div>🔪 <strong>Peel:</strong> Take skin off</div>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="bg-orange-500 hover:bg-orange-600 text-white text-2xl font-bold py-4 px-10 rounded-2xl shadow-[0_6px_0_#c2410c] active:translate-y-1 active:shadow-[0_2px_0_#c2410c] transition-all cursor-pointer">
+                👩‍🍳 ENTER THE KITCHEN!
+            </button>
+        </div>
+
+        <!-- KITCHEN SIMULATOR SCREEN -->
+        <div id="kitchen-screen" class="hidden flex-col">
+            <!-- Top Restaurant Awning HUD -->
+            <div class="kitchen-cloth text-white p-4 flex flex-wrap justify-between items-center gap-2 shadow-md">
+                <!-- Chef Hats (Lives) -->
+                <div class="bg-white/95 text-gray-800 px-3 py-1.5 rounded-xl font-bold flex items-center space-x-1 shadow" id="hats-container">
+                    <span class="text-xl">👩‍🍳</span>
+                    <span class="text-xl">👩‍🍳</span>
+                    <span class="text-xl">👩‍🍳</span>
+                </div>
+
+                <!-- Dish & Step Indicator -->
+                <div class="bg-orange-900/90 px-4 py-1.5 rounded-full text-sm md:text-base font-bold border-2 border-yellow-300 flex items-center space-x-2">
+                    <span id="dish-icon">🥗</span>
+                    <span id="dish-title">Dish 1: Fruit Salad</span>
+                    <span class="bg-yellow-400 text-orange-950 px-2 py-0.5 rounded-full text-xs">Step <span id="q-current">1</span>/12</span>
+                </div>
+
+                <!-- Stars & Combo -->
+                <div class="flex items-center space-x-2">
+                    <div id="streak-badge" class="hidden bg-yellow-300 text-red-900 px-3 py-1 rounded-full text-xs font-extrabold animate-bounce border border-red-500">
+                        🔥 <span id="streak-count">0</span>x CHEF COMBO
+                    </div>
+                    <div class="bg-white/95 text-orange-900 px-3 py-1.5 rounded-xl font-bold text-lg flex items-center space-x-1 shadow">
+                        <span>⭐</span>
+                        <span id="score-display">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Split Workspace: Left = Cooking Station & Question | Right = Live Recipe Notebook -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 p-5 md:p-6 bg-amber-50/60">
+
+                <!-- LEFT SIDE: Interactive Cooking Counter (7 cols) -->
+                <div class="lg:col-span-7 flex flex-col justify-between bg-white p-5 rounded-2xl border-2 border-orange-200 shadow-sm">
+                    <div>
+                        <!-- Step Badge -->
+                        <div class="flex items-center justify-between mb-3">
+                            <span id="step-badge" class="bg-orange-100 text-orange-800 font-bold px-3 py-1 rounded-full text-xs md:text-sm border border-orange-300">
+                                🥇 Step 1 of 4 • Order Word
+                            </span>
+                            <span id="vocab-tag" class="text-xs font-bold text-gray-400 uppercase tracking-wider">Target: FIRST & WASH</span>
+                        </div>
+
+                        <!-- Visual Cooking Bowl / Plate Stage -->
+                        <div class="w-full bg-gradient-to-b from-amber-50 to-orange-100 rounded-2xl border-2 border-dashed border-orange-300 p-4 mb-4 flex flex-col items-center justify-center relative min-h-[130px]">
+                            <div id="cooking-stage-Origin" class="text-5xl md:text-6xl mb-2 transition-all duration-300">
+                                🥣
+                            </div>
+                            <div id="ingredients-in-bowl" class="flex items-center space-x-2 text-2xl bg-white/80 px-4 py-1 rounded-full border border-orange-200 shadow-inner">
+                                <span class="text-xs text-gray-500 font-bold">Counter: Ready to cook!</span>
+                            </div>
+                        </div>
+
+                        <!-- Recipe Sentence Prompt with Blank -->
+                        <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 mb-5 text-center">
+                            <p class="text-xs font-bold text-amber-700 uppercase mb-1">Complete the Recipe Sentence:</p>
+                            <h2 id="q-text" class="text-lg md:text-xl font-bold text-gray-800 leading-relaxed">
+                                Loading recipe step...
+                            </h2>
+                        </div>
+
+                        <!-- 4 Action Cards -->
+                        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Instant Chef Feedback Modal (Inside Left Column) -->
+                    <div id="feedback-box" class="hidden mt-5 p-4 rounded-2xl border-4 bounce-in">
+                        <div class="flex items-start space-x-3">
+                            <div id="fb-icon" class="text-3xl">👩‍🍳</div>
+                            <div class="flex-1">
+                                <h3 id="fb-title" class="text-lg font-bold">Delicious!</h3>
+                                <p id="fb-correct-ans" class="text-sm font-bold my-1 hidden"></p>
+                                <p id="fb-explanation" class="text-sm md:text-base font-medium leading-snug"></p>
+                            </div>
+                        </div>
+                        <button onclick="nextStep()" id="next-btn" class="mt-3 w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 px-6 rounded-xl shadow-[0_4px_0_#c2410c] active:translate-y-1 transition-all text-base cursor-pointer">
+                            Next Cooking Step ➡️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDE: Live Recipe Book Builder (5 cols) -->
+                <div class="lg:col-span-5 flex flex-col">
+                    <div class="recipe-paper border-4 border-amber-400 rounded-2xl p-5 shadow-md flex-1 flex flex-col justify-between relative">
+                        <div>
+                            <!-- Notebook Header -->
+                            <div class="border-b-2 border-amber-400 pb-2 mb-4 flex items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-bold text-amber-700 uppercase">📖 Chef's Recipe Book</span>
+                                    <h3 id="notebook-dish-title" class="text-xl font-bold text-orange-800">🥗 Recipe 1: Super Fruit Salad</h3>
+                                </div>
+                                <span id="notebook-dish-emoji" class="text-4xl">🥗</span>
+                            </div>
+
+                            <!-- Live Completed Steps List -->
+                            <div id="recipe-steps-list" class="space-y-3 text-sm md:text-base">
+                                <!-- 4 Slots per dish -->
+                            </div>
+                        </div>
+
+                        <!-- Mini Reminder Footer inside Notebook -->
+                        <div class="mt-6 bg-white/90 p-3 rounded-xl border border-amber-300 text-xs text-gray-600 space-y-1">
+                            <div class="font-bold text-amber-900">💡 Chef's Order Rule:</div>
+                            <div class="flex justify-between font-semibold text-orange-700">
+                                <span>1️⃣ First</span>
+                                <span>➡️</span>
+                                <span>2️⃣ Next</span>
+                                <span>➡️</span>
+                                <span>3️⃣ Later</span>
+                                <span>➡️</span>
+                                <span>4️⃣ Finally</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- END SCREEN: MASTER CHEF CERTIFICATE -->
+        <div id="end-screen" class="hidden p-6 md:p-10 text-center flex-col items-center justify-center space-y-6">
+            <div id="end-trophy" class="text-7xl md:text-8xl bounce-in">👩‍🍳🏆</div>
+            <h1 class="text-3xl md:text-5xl font-bold text-orange-600">Master Chef Graduated!</h1>
+            <p class="text-lg text-gray-600 font-medium">You cooked all 3 dishes and wrote a complete Recipe Book!</p>
+
+            <!-- Score Summary -->
+            <div class="grid grid-cols-3 gap-3 w-full max-w-md bg-orange-50 p-4 rounded-2xl border-2 border-orange-200">
+                <div class="flex flex-col items-center">
+                    <span class="text-xs text-gray-500 font-bold">SCORE</span>
+                    <span id="final-score" class="text-2xl md:text-3xl font-bold text-orange-600">0</span>
+                </div>
+                <div class="flex flex-col items-center border-x border-orange-200">
+                    <span class="text-xs text-gray-500 font-bold">STEPS RIGHT</span>
+                    <span id="final-correct" class="text-2xl md:text-3xl font-bold text-green-600">0/12</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-xs text-gray-500 font-bold">CHEF RANK</span>
+                    <span id="final-rank" class="text-base md:text-xl font-bold text-amber-600">🌟 Head Chef</span>
+                </div>
+            </div>
+
+            <!-- Complete Recipe Vocabulary Cheat Sheet -->
+            <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 w-full max-w-2xl text-left text-xs md:text-sm space-y-2">
+                <p class="font-bold text-amber-900 text-center text-base mb-1">📖 Your Master Recipe Example:</p>
+                <div class="bg-white p-3 rounded-xl border border-amber-200 space-y-1 font-medium text-gray-700">
+                    <p>🥇 <strong class="text-orange-600">First,</strong> <strong>wash</strong> and <strong>chop</strong> the vegetables into small pieces.</p>
+                    <p>🥈 <strong class="text-orange-600">Next,</strong> <strong>dice</strong> the cheese into small cubes and <strong>add</strong> them to a big <strong>bowl</strong>.</p>
+                    <p>🥉 <strong class="text-orange-600">Later,</strong> <strong>pour</strong> olive oil and <strong>mix</strong> everything with a spoon.</p>
+                    <p>🏁 <strong class="text-orange-600">Finally,</strong> put the salad on a <strong>plate</strong> and serve!</p>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="bg-orange-500 hover:bg-orange-600 text-white text-xl font-bold py-4 px-10 rounded-2xl shadow-[0_6px_0_#c2410c] active:translate-y-1 transition-all cursor-pointer">
+                🔄 Cook Again!
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Sound Effects via Web Audio API
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+        }
+
+        function playSound(type) {
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.1); // G5
+                    osc.frequency.setValueAtTime(987.77, audioCtx.currentTime + 0.2); // B5
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(260, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(180, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } else if (type === 'win') {
+                    osc.type = 'triangle';
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.12);
+                    });
+                    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.6);
+                }
+            } catch (e) {}
+        }
+
+        // 12 Gamified Cooking Steps across 3 Dishes (4 steps per dish: First -> Next -> Later -> Finally)
+        // Covers: first, next, then, later, finally + chop, dice, add, mix, bowl, plate, peel, pour, bake
+        const questions = [
+            // ================= DISH 1: SUPER FRUIT SALAD (Steps 1-4) =================
+            {
+                dishIndex: 0,
+                dishName: "Recipe 1: Super Fruit Salad",
+                dishIcon: "🥗",
+                stepInDish: 1,
+                stepBadge: "🥇 Dish 1 • Step 1 of 4 (Beginning)",
+                vocabTag: "Target: FIRST & CHOP",
+                stageEmoji: "🔪🍎🍌",
+                bowlItems: "🍎 🍌 (On cutting board)",
+                question: "\"________, wash the apples and ________ them into small pieces with a knife.\"",
+                completedSentence: "🥇 First, wash the apples and chop them into pieces.",
+                options: [
+                    { text: "🥇 First / 🔪 chop", isCorrect: true },
+                    { text: "🏁 Finally / 🍽️ plate", isCorrect: false },
+                    { text: "🥉 Later / 🥄 mix", isCorrect: false },
+                    { text: "🏁 Finally / 🥣 bowl", isCorrect: false }
+                ],
+                simpleExplanation: "We use 'FIRST' for Step 1 (the very beginning of a recipe). And we use 'CHOP' when we cut food into pieces with a knife!"
+            },
+            {
+                dishIndex: 0,
+                dishName: "Recipe 1: Super Fruit Salad",
+                dishIcon: "🥗",
+                stepInDish: 2,
+                stepBadge: "🥈 Dish 1 • Step 2 of 4 (Middle)",
+                vocabTag: "Target: NEXT, ADD & BOWL",
+                stageEmoji: "🥣🍓🍇",
+                bowlItems: "🥣 + 🍎 🍌 🍓",
+                question: "\"________, ________ the strawberries and chopped apples into a big, deep ________.\"",
+                completedSentence: "🥈 Next, add the strawberries and apples into a big bowl.",
+                options: [
+                    { text: "🥈 Next / ➕ add / 🥣 bowl", isCorrect: true },
+                    { text: "🥇 First / 🔪 chop / 🔪 knife", isCorrect: false },
+                    { text: "🏁 Finally / 🥄 mix / 🥛 glass", isCorrect: false },
+                    { text: "🥇 First / 🎲 dice / 🍴 fork", isCorrect: false }
+                ],
+                simpleExplanation: "After 'First', we use 'NEXT' for Step 2! 'ADD' means to put ingredients inside, and a 'BOWL' is a deep round dish for making salad."
+            },
+            {
+                dishIndex: 0,
+                dishName: "Recipe 1: Super Fruit Salad",
+                dishIcon: "🥗",
+                stepInDish: 3,
+                stepBadge: "🥉 Dish 1 • Step 3 of 4 (Before the end)",
+                vocabTag: "Target: LATER & MIX",
+                stageEmoji: "🍯🥄🥣",
+                bowlItems: "🥣 🍎🍓🍌 + 🍯 (Stirring!)",
+                question: "\"________, put some sweet honey on the fruits and ________ everything together with a big spoon.\"",
+                completedSentence: "🥉 Later, put honey on the fruits and mix everything with a spoon.",
+                options: [
+                    { text: "🥉 Later / 🥄 mix", isCorrect: true },
+                    { text: "🥇 First / 🔪 chop", isCorrect: false },
+                    { text: "🥇 First / 🎲 dice", isCorrect: false },
+                    { text: "🏁 Finally / 🔪 peel", isCorrect: false }
+                ],
+                simpleExplanation: "We use 'LATER' for Step 3! And when we stir all the fruits and honey together with a spoon, we say 'MIX'!"
+            },
+            {
+                dishIndex: 0,
+                dishName: "Recipe 1: Super Fruit Salad",
+                dishIcon: "🥗",
+                stepInDish: 4,
+                stepBadge: "🏁 Dish 1 • Step 4 of 4 (The Last Step!)",
+                vocabTag: "Target: FINALLY & PLATE",
+                stageEmoji: "🍽️🥗✨",
+                bowlItems: "🍽️ Fruit Salad is Ready!",
+                question: "\"________, put the fruit salad on a flat ________ and eat it with your friends!\"",
+                completedSentence: "🏁 Finally, put the fruit salad on a plate and eat it!",
+                options: [
+                    { text: "🏁 Finally / 🍽️ plate", isCorrect: true },
+                    { text: "🥇 First / 🔪 chop", isCorrect: false },
+                    { text: "🥈 Next / 🎲 dice", isCorrect: false },
+                    { text: "🥇 First / 🥄 mix", isCorrect: false }
+                ],
+                simpleExplanation: "'FINALLY' always shows the LAST step of a recipe! And a 'PLATE' is a flat dish we use to serve and eat food."
+            },
+
+            // ================= DISH 2: CHEF'S VEGGIE SOUP (Steps 5-8) =================
+            {
+                dishIndex: 1,
+                dishName: "Recipe 2: Warm Veggie Soup",
+                dishIcon: "🍲",
+                stepInDish: 1,
+                stepBadge: "🥇 Dish 2 • Step 1 of 4 (Beginning)",
+                vocabTag: "Target: FIRST & DICE",
+                stageEmoji: "🥔🥕🎲",
+                bowlItems: "🥔 🥕 (Cut into tiny cubes!)",
+                question: "Let's cook Veggie Soup! Step 1: \"________, peel the carrots and potatoes, and ________ them into small cubes (squares).\"",
+                completedSentence: "🥇 First, peel the carrots and dice them into small cubes.",
+                options: [
+                    { text: "🥇 First / 🎲 dice", isCorrect: true },
+                    { text: "🏁 Finally / 🫗 pour", isCorrect: false },
+                    { text: "🥉 Later / 🍽️ plate", isCorrect: false },
+                    { text: "🏁 Finally / 🥄 mix", isCorrect: false }
+                ],
+                simpleExplanation: "Step 1 starts with 'FIRST'! And 'DICE' (like a game dice 🎲) means to cut food into small square cubes!"
+            },
+            {
+                dishIndex: 1,
+                dishName: "Recipe 2: Warm Veggie Soup",
+                dishIcon: "🍲",
+                stepInDish: 2,
+                stepBadge: "🥈 Dish 2 • Step 2 of 4 (Middle)",
+                vocabTag: "Target: NEXT & POUR",
+                stageEmoji: "🫗💧🍲",
+                bowlItems: "🍲 + 🥕 🥔 + 💧 Water",
+                question: "Step 2: \"________, put the diced vegetables into a pot and ________ 3 glasses of water into the pot.\"",
+                completedSentence: "🥈 Next, put the vegetables into a pot and pour water.",
+                options: [
+                    { text: "🥈 Next / 🫗 pour", isCorrect: true },
+                    { text: "🥇 First / 🔪 chop", isCorrect: false },
+                    { text: "🏁 Finally / 🎲 dice", isCorrect: false },
+                    { text: "🥇 First / 🍽️ plate", isCorrect: false }
+                ],
+                simpleExplanation: "We use 'NEXT' for Step 2! When we put a liquid (like water, milk, or oil) into a pot or glass, we use the verb 'POUR'!"
+            },
+            {
+                dishIndex: 1,
+                dishName: "Recipe 2: Warm Veggie Soup",
+                dishIcon: "🍲",
+                stepInDish: 3,
+                stepBadge: "🥉 Dish 2 • Step 3 of 4 (Before the end)",
+                vocabTag: "Target: LATER, ADD & MIX",
+                stageEmoji: "🧂🥄🍲",
+                bowlItems: "🍲 + 🧂 Salt (Cooking & stirring!)",
+                question: "Step 3: \"________, ________ a little salt to the soup and ________ it slowly with a wooden spoon.\"",
+                completedSentence: "🥉 Later, add a little salt and mix it slowly.",
+                options: [
+                    { text: "🥉 Later / ➕ add / 🥄 mix", isCorrect: true },
+                    { text: "🥇 First / 🔪 chop / 🍽️ plate", isCorrect: false },
+                    { text: "🏁 Finally / 🎲 dice / 🔪 knife", isCorrect: false },
+                    { text: "🥇 First / 🔪 peel / 🥣 bowl", isCorrect: false }
+                ],
+                simpleExplanation: "'LATER' is for Step 3! We 'ADD' (put in) salt and 'MIX' (stir) the soup so it tastes delicious."
+            },
+            {
+                dishIndex: 1,
+                dishName: "Recipe 2: Warm Veggie Soup",
+                dishIcon: "🍲",
+                stepInDish: 4,
+                stepBadge: "🏁 Dish 2 • Step 4 of 4 (The Last Step!)",
+                vocabTag: "Target: FINALLY & BOWL",
+                stageEmoji: "🥣🍲😋",
+                bowlItems: "🥣 Hot Veggie Soup is Ready!",
+                question: "Step 4 (Last Step): \"________, pour the hot soup into a deep ________ and enjoy your meal!\"",
+                completedSentence: "🏁 Finally, pour the hot soup into a deep bowl and enjoy!",
+                options: [
+                    { text: "🏁 Finally / 🥣 bowl", isCorrect: true },
+                    { text: "🥇 First / 🍽️ flat plate", isCorrect: false },
+                    { text: "🥈 Next / 🔪 knife", isCorrect: false },
+                    { text: "🥇 First / 🎲 dice", isCorrect: false }
+                ],
+                simpleExplanation: "'FINALLY' is for the last step! And we always eat liquid soup in a deep 'BOWL' (if we put soup on a flat plate, it spills!)."
+            },
+
+            // ================= DISH 3: SUPER CHEESE OMELETTE (Steps 9-12) =================
+            {
+                dishIndex: 2,
+                dishName: "Recipe 3: Super Cheese Omelette",
+                dishIcon: "🍳",
+                stepInDish: 1,
+                stepBadge: "🥇 Dish 3 • Step 1 of 4 (Beginning)",
+                vocabTag: "Target: FIRST, BOWL & MIX",
+                stageEmoji: "🥚🥣🥄",
+                bowlItems: "🥣 + 🥚🥚 (Whisking eggs!)",
+                question: "Let's make an Omelette! Step 1: \"________, crack two eggs into a ________ and ________ them well with a fork.\"",
+                completedSentence: "🥇 First, crack two eggs into a bowl and mix them well.",
+                options: [
+                    { text: "🥇 First / 🥣 bowl / 🥄 mix", isCorrect: true },
+                    { text: "🏁 Finally / 🍽️ plate / 🔪 chop", isCorrect: false },
+                    { text: "🥉 Later / 🔪 knife / 🎲 dice", isCorrect: false },
+                    { text: "🏁 Finally / 🥣 bowl / 🔪 peel", isCorrect: false }
+                ],
+                simpleExplanation: "'FIRST' is Step 1! We crack eggs into a deep 'BOWL' and 'MIX' (stir) the yellow and white parts together."
+            },
+            {
+                dishIndex: 2,
+                dishName: "Recipe 3: Super Cheese Omelette",
+                dishIcon: "🍳",
+                stepInDish: 2,
+                stepBadge: "🥈 Dish 3 • Step 2 of 4 (Middle)",
+                vocabTag: "Target: NEXT, DICE & ADD",
+                stageEmoji: "🧀🍅🎲",
+                bowlItems: "🥣 🥚 + 🧀 🍅 (Cubes added!)",
+                question: "Step 2: \"________, ________ the white cheese and tomatoes into small cubes and ________ them to the eggs.\"",
+                completedSentence: "🥈 Next, dice the cheese and tomatoes and add them to the eggs.",
+                options: [
+                    { text: "🥈 Next / 🎲 dice / ➕ add", isCorrect: true },
+                    { text: "🥇 First / 🫗 pour / 🍽️ plate", isCorrect: false },
+                    { text: "🏁 Finally / 🥄 mix / 🥛 glass", isCorrect: false },
+                    { text: "🥇 First / 🍽️ plate / 🔪 peel", isCorrect: false }
+                ],
+                simpleExplanation: "'NEXT' is Step 2! We 'DICE' cheese and tomatoes into small cubes, and 'ADD' (put) them into the egg bowl."
+            },
+            {
+                dishIndex: 2,
+                dishName: "Recipe 3: Super Cheese Omelette",
+                dishIcon: "🍳",
+                stepInDish: 3,
+                stepBadge: "🥉 Dish 3 • Step 3 of 4 (Before the end)",
+                vocabTag: "Target: LATER & POUR",
+                stageEmoji: "🍳🔥",
+                bowlItems: "🍳 Sizzling in the hot pan!",
+                question: "Step 3: \"________, heat some butter in a frying pan and ________ the egg mixture into the hot pan.\"",
+                completedSentence: "🥉 Later, heat butter in a pan and pour the egg mixture in.",
+                options: [
+                    { text: "🥉 Later / 🫗 pour", isCorrect: true },
+                    { text: "🥇 First / 🎲 dice", isCorrect: false },
+                    { text: "🏁 Finally / 🔪 chop", isCorrect: false },
+                    { text: "🥇 First / 🔪 peel", isCorrect: false }
+                ],
+                simpleExplanation: "'LATER' is Step 3! Since raw mixed eggs are liquid, we 'POUR' them from the bowl into the frying pan."
+            },
+            {
+                dishIndex: 2,
+                dishName: "Recipe 3: Super Cheese Omelette",
+                dishIcon: "🍳",
+                stepInDish: 4,
+                stepBadge: "🏁 Dish 3 • Step 4 of 4 (Grand Finale!)",
+                vocabTag: "Target: FINALLY & PLATE",
+                stageEmoji: "🍽️🍳👑",
+                bowlItems: "🍽️ Master Chef Omelette is Ready!",
+                question: "Step 4 (Last Step): \"________, cook for 3 minutes, put the hot omelette on a flat ________, and serve!\"",
+                completedSentence: "🏁 Finally, put the hot omelette on a flat plate and serve!",
+                options: [
+                    { text: "🏁 Finally / 🍽️ plate", isCorrect: true },
+                    { text: "🥇 First / 🥣 bowl", isCorrect: false },
+                    { text: "🥈 Next / 🔪 chop", isCorrect: false },
+                    { text: "🥉 Later / 🎲 dice", isCorrect: false }
+                ],
+                simpleExplanation: "'FINALLY' is our last word! And we put solid foods like an omelette on a flat 'PLATE' to eat!"
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+        let hats = 3;
+        let streak = 0;
+        let correctCount = 0;
+        // Track completed sentences for each dish in the live recipe book
+        let completedStepsByDish = [[], [], []];
+
+        function startGame() {
+            currentQIndex = 0;
+            score = 0;
+            hats = 3;
+            streak = 0;
+            correctCount = 0;
+            completedStepsByDish = [[], [], []];
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('flex');
+
+            const kitchenScreen = document.getElementById('kitchen-screen');
+            kitchenScreen.classList.remove('hidden');
+            kitchenScreen.classList.add('flex');
+
+            updateHUD();
+            loadStep();
+        }
+
+        function updateHUD() {
+            const hatsContainer = document.getElementById('hats-container');
+            hatsContainer.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                const span = document.createElement('span');
+                span.className = 'text-xl transition-transform';
+                span.textContent = i < hats ? '👩‍🍳' : '💨';
+                hatsContainer.appendChild(span);
+            }
+
+            const q = questions[currentQIndex];
+            document.getElementById('dish-icon').textContent = q.dishIcon;
+            document.getElementById('dish-title').textContent = q.dishName;
+            document.getElementById('q-current').textContent = currentQIndex + 1;
+            document.getElementById('score-display').textContent = score;
+
+            const streakBadge = document.getElementById('streak-badge');
+            if (streak >= 2) {
+                streakBadge.classList.remove('hidden');
+                document.getElementById('streak-count').textContent = streak;
+            } else {
+                streakBadge.classList.add('hidden');
+            }
+        }
+
+        function renderNotebook() {
+            const q = questions[currentQIndex];
+            const dishIdx = q.dishIndex;
+            const dishSteps = completedStepsByDish[dishIdx];
+
+            document.getElementById('notebook-dish-title').textContent = `${q.dishIcon} ${q.dishName}`;
+            document.getElementById('notebook-dish-emoji').textContent = q.dishIcon;
+
+            const listEl = document.getElementById('recipe-steps-list');
+            listEl.innerHTML = '';
+
+            const stepLabels = ["1. First, ...", "2. Next, ...", "3. Later, ...", "4. Finally, ..."];
+
+            for (let i = 0; i < 4; i++) {
+                const item = document.createElement('div');
+                if (dishSteps[i]) {
+                    item.className = 'bg-green-100 border-2 border-green-400 text-green-900 p-2.5 rounded-xl font-bold text-xs md:text-sm bounce-in flex items-center justify-between';
+                    item.innerHTML = `<span>${dishSteps[i]}</span> <span>✅</span>`;
+                } else if (i + 1 === q.stepInDish) {
+                    item.className = 'bg-orange-100 border-2 border-dashed border-orange-400 text-orange-800 p-2.5 rounded-xl font-bold text-xs md:text-sm animate-pulse';
+                    item.innerHTML = `<span>✍️ Writing Step ${i + 1}: ${stepLabels[i]}</span>`;
+                } else {
+                    item.className = 'bg-white/60 border border-amber-200 text-gray-400 p-2.5 rounded-xl font-semibold text-xs md:text-sm';
+                    item.innerHTML = `<span>🔒 ${stepLabels[i]}</span>`;
+                }
+                listEl.appendChild(item);
+            }
+        }
+
+        function loadStep() {
+            const q = questions[currentQIndex];
+            document.getElementById('step-badge').textContent = q.stepBadge;
+            document.getElementById('vocab-tag').textContent = q.vocabTag;
+
+            const stageIcon = document.getElementById('cooking-stage-Origin');
+            stageIcon.textContent = q.stageEmoji;
+            stageIcon.classList.remove('cook-spin');
+            void stageIcon.offsetWidth;
+            stageIcon.classList.add('cook-spin');
+
+            document.getElementById('ingredients-in-bowl').innerHTML = `<span class="text-sm font-bold text-orange-900">${q.bowlItems}</span>`;
+            document.getElementById('q-text').textContent = q.question;
+
+            document.getElementById('feedback-box').classList.add('hidden');
+
+            renderNotebook();
+
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+
+            shuffledOptions.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'tool-card bg-amber-50 hover:bg-orange-100 text-gray-800 font-bold text-base md:text-lg py-3.5 px-4 rounded-2xl border-2 border-amber-400 text-left flex items-center justify-between cursor-pointer';
+                btn.innerHTML = `<span>${opt.text}</span>`;
+                btn.onclick = () => selectAnswer(btn, opt, shuffledOptions);
+                grid.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedBtn, selectedOpt, allOptions) {
+            const q = questions[currentQIndex];
+            const buttons = document.getElementById('options-grid').children;
+
+            for (let btn of buttons) {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-orange-100', 'cursor-pointer');
+            }
+
+            const fbBox = document.getElementById('feedback-box');
+            const fbIcon = document.getElementById('fb-icon');
+            const fbTitle = document.getElementById('fb-title');
+            const fbCorrectAns = document.getElementById('fb-correct-ans');
+            const fbExplanation = document.getElementById('fb-explanation');
+
+            const correctOption = allOptions.find(o => o.isCorrect);
+
+            for (let i = 0; i < buttons.length; i++) {
+                if (allOptions[i].isCorrect) {
+                    buttons[i].classList.add('card-correct');
+                    buttons[i].innerHTML += ` <span>✅</span>`;
+                }
+            }
+
+            // Record completed step in the Live Recipe Notebook!
+            completedStepsByDish[q.dishIndex][q.stepInDish - 1] = q.completedSentence;
+            renderNotebook();
+
+            if (selectedOpt.isCorrect) {
+                playSound('correct');
+                streak++;
+                correctCount++;
+                const bonus = streak >= 2 ? 50 : 0;
+                score += 100 + bonus;
+
+                fbBox.className = 'mt-5 p-4 rounded-2xl border-4 bg-green-50 border-green-400 text-green-950 bounce-in block';
+                fbIcon.textContent = '👩‍🍳';
+                fbTitle.textContent = streak >= 2 ? `Master Chef Combo! +${100 + bonus} Pts! 🔥` : 'Delicious Step! +100 Pts! ⭐';
+                fbTitle.className = 'text-lg font-bold text-green-700';
+                fbCorrectAns.classList.add('hidden');
+                fbExplanation.textContent = `💡 Chef Tip: ${q.simpleExplanation}`;
+            } else {
+                playSound('wrong');
+                selectedBtn.classList.add('card-wrong', 'shake');
+                selectedBtn.innerHTML += ` <span>❌</span>`;
+                streak = 0;
+                if (hats > 0) hats--;
+
+                fbBox.className = 'mt-5 p-4 rounded-2xl border-4 bg-red-50 border-red-400 text-red-950 bounce-in block';
+                fbIcon.textContent = '📖';
+                fbTitle.textContent = 'Oops! Almost burned the dish!';
+                fbTitle.className = 'text-lg font-bold text-red-700';
+
+                fbCorrectAns.classList.remove('hidden');
+                fbCorrectAns.className = 'text-sm font-bold my-1.5 bg-green-200 text-green-900 inline-block px-3 py-1 rounded-lg';
+                fbCorrectAns.innerHTML = `✅ Correct Answer: ${correctOption.text}`;
+
+                fbExplanation.textContent = `Simple Rule: ${q.simpleExplanation}`;
+            }
+
+            const nextBtn = document.getElementById('next-btn');
+            if (q.stepInDish === 4 && currentQIndex < questions.length - 1) {
+                nextBtn.textContent = "🎉 Dish Finished! Cook Next Recipe ➡️";
+            } else if (currentQIndex === questions.length - 1) {
+                nextBtn.textContent = "🏆 Finish Recipe Book!";
+            } else {
+                nextBtn.textContent = "Next Cooking Step ➡️";
+            }
+
+            updateHUD();
+        }
+
+        function nextStep() {
+            currentQIndex++;
+            if (currentQIndex < questions.length) {
+                updateHUD();
+                loadStep();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            playSound('win');
+            document.getElementById('kitchen-screen').classList.add('hidden');
+            document.getElementById('kitchen-screen').classList.remove('flex');
+
+            const endScreen = document.getElementById('end-screen');
+            endScreen.classList.remove('hidden');
+            endScreen.classList.add('flex');
+
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('final-correct').textContent = `${correctCount}/${questions.length}`;
+
+            let rank = "🥄 Kitchen Helper";
+            let trophy = "🥉";
+            if (correctCount >= 10) {
+                rank = "👑 Master Chef";
+                trophy = "👩‍🍳🏆";
+            } else if (correctCount >= 7) {
+                rank = "⭐ Sous Chef";
+                trophy = "🥈";
+            }
+            document.getElementById('final-rank').textContent = rank;
+            document.getElementById('end-trophy').textContent = trophy;
+        }
+    </script>
+</body>
+</html>

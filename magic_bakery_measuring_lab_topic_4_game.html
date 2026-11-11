@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Measuring Game - Topic 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #e0e7ff 0%, #fae8ff 100%);
+            min-height: 100vh;
+            user-select: none;
+        }
+        .bounce-in {
+            animation: bounceIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-3px, 0, 0); }
+            20%, 80% { transform: translate3d(5px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+            40%, 60% { transform: translate3d(8px, 0, 0); }
+        }
+        .option-btn {
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 0 #cbd5e1;
+        }
+        .option-btn:active:not(:disabled) {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #cbd5e1;
+        }
+        .btn-correct {
+            background-color: #22c55e !important;
+            border-color: #15803d !important;
+            color: white !important;
+            box-shadow: 0 5px 0 #166534 !important;
+        }
+        .btn-wrong {
+            background-color: #ef4444 !important;
+            border-color: #b91c1c !important;
+            color: white !important;
+            box-shadow: 0 5px 0 #991b1b !important;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <!-- Clean Single-Card Game Container -->
+    <div id="game-app" class="w-full max-w-xl bg-white rounded-3xl shadow-2xl border-4 border-purple-500 overflow-hidden">
+
+        <!-- START SCREEN -->
+        <div id="start-screen" class="p-6 md:p-8 text-center flex flex-col items-center space-y-5">
+            <div class="text-6xl">🥛 🥄 🌗 🌘</div>
+            <h1 class="text-3xl md:text-4xl font-bold text-purple-700">Measurement Quiz!</h1>
+            <p class="text-gray-600 font-medium text-base md:text-lg">
+                Learn the 5 easy measurement words before we play:
+            </p>
+
+            <!-- Super Simple 5-Word Visual Dictionary -->
+            <div class="w-full bg-purple-50 p-4 rounded-2xl border-2 border-purple-200 text-left space-y-2.5 text-base">
+                <div class="bg-white p-2.5 rounded-xl border border-purple-100 flex items-center justify-between">
+                    <span>🥄 <strong class="text-purple-700">Teaspoon:</strong></span>
+                    <span class="text-gray-700 font-semibold">A <strong>SMALL</strong> spoon (for tea/salt)</span>
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-purple-100 flex items-center justify-between">
+                    <span>🥣 <strong class="text-purple-700">Tablespoon:</strong></span>
+                    <span class="text-gray-700 font-semibold">A <strong>BIG</strong> spoon (for soup/oil)</span>
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-purple-100 flex items-center justify-between">
+                    <span>🥛 <strong class="text-purple-700">A Cup:</strong></span>
+                    <span class="text-gray-700 font-semibold">A big glass (for milk/flour)</span>
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-purple-100 flex items-center justify-between">
+                    <span>🌗 <strong class="text-pink-600">A Half (1/2):</strong></span>
+                    <span class="text-gray-700 font-semibold"><strong>1 of 2</strong> equal parts (50%)</span>
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-purple-100 flex items-center justify-between">
+                    <span>🌘 <strong class="text-pink-600">A Quarter (1/4):</strong></span>
+                    <span class="text-gray-700 font-semibold"><strong>1 of 4</strong> equal parts (25%)</span>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full bg-purple-600 hover:bg-purple-700 text-white text-2xl font-bold py-4 rounded-2xl shadow-[0_6px_0_#581c87] active:translate-y-1 transition-all cursor-pointer">
+                🚀 START GAME!
+            </button>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quiz-screen" class="hidden flex-col">
+            <!-- Simple Top Bar -->
+            <div class="bg-purple-600 text-white p-4 flex justify-between items-center">
+                <div id="hearts-container" class="flex space-x-1 text-2xl">
+                    <span>❤️</span><span>❤️</span><span>❤️</span>
+                </div>
+                <div class="bg-purple-800 px-4 py-1 rounded-full font-bold text-sm">
+                    Question <span id="q-current">1</span> / 10
+                </div>
+                <div class="bg-yellow-400 text-purple-950 px-3 py-1 rounded-xl font-bold text-lg">
+                    ⭐ <span id="score-display">0</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-purple-100 h-2.5">
+                <div id="progress-bar" class="bg-green-400 h-2.5 transition-all duration-300" style="width: 10%;"></div>
+            </div>
+
+            <!-- Question Content -->
+            <div class="p-6 flex flex-col items-center">
+                
+                <!-- Clear Visual Box -->
+                <div class="w-full bg-purple-50 border-2 border-purple-200 rounded-2xl p-4 mb-4 flex flex-col items-center justify-center">
+                    <div id="q-visual" class="text-5xl md:text-6xl mb-2">🥄</div>
+                    <span id="q-hint" class="bg-white text-purple-800 font-bold px-3 py-1 rounded-full text-sm border border-purple-200">
+                        SMALL Spoon
+                    </span>
+                </div>
+
+                <!-- Short, Clear Question -->
+                <h2 id="q-text" class="text-xl md:text-2xl font-bold text-gray-800 text-center mb-5 leading-snug">
+                    Loading...
+                </h2>
+
+                <!-- 4 Simple Buttons -->
+                <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full"></div>
+
+                <!-- Immediate Simple Explanation Box -->
+                <div id="feedback-box" class="hidden w-full mt-5 p-4 rounded-2xl border-4 bounce-in">
+                    <h3 id="fb-title" class="text-lg font-bold mb-1">Correct!</h3>
+                    <p id="fb-correct-ans" class="text-sm font-bold mb-1.5 hidden"></p>
+                    <p id="fb-explanation" class="text-base font-medium"></p>
+                    <button onclick="nextQuestion()" class="mt-3 w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl shadow-[0_4px_0_#581c87] cursor-pointer text-lg">
+                        Next ➡️
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- END SCREEN -->
+        <div id="end-screen" class="hidden p-8 text-center flex-col items-center space-y-5">
+            <div class="text-7xl bounce-in">🏆</div>
+            <h1 class="text-3xl md:text-4xl font-bold text-purple-700">Great Job!</h1>
+            <p class="text-lg text-gray-600 font-medium">You finished the Measurement Quiz!</p>
+
+            <div class="bg-purple-50 p-4 rounded-2xl border-2 border-purple-200 w-full flex justify-around">
+                <div>
+                    <div class="text-xs font-bold text-gray-500">SCORE</div>
+                    <div id="final-score" class="text-3xl font-bold text-purple-700">0</div>
+                </div>
+                <div class="border-l-2 border-purple-200"></div>
+                <div>
+                    <div class="text-xs font-bold text-gray-500">CORRECT</div>
+                    <div id="final-correct" class="text-3xl font-bold text-green-600">0/10</div>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full bg-purple-600 hover:bg-purple-700 text-white text-xl font-bold py-4 rounded-2xl shadow-[0_6px_0_#581c87] cursor-pointer">
+                🔄 Play Again!
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Simple Audio Effects
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+        function playSound(type) {
+            try {
+                if (!audioCtx) audioCtx = new AudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(784, audioCtx.currentTime + 0.12);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } else {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(180, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                }
+            } catch (e) {}
+        }
+
+        // 10 Super Clear, Short & Precise Questions for 5th Grade A1
+        const questions = [
+            {
+                visual: "🍵 🥄",
+                hint: "SMALL Spoon",
+                question: "Which word means a SMALL spoon (used for tea or salt)?",
+                options: [
+                    { text: "🥄 A teaspoon", isCorrect: true },
+                    { text: "🥣 A tablespoon", isCorrect: false },
+                    { text: "🥛 A cup", isCorrect: false },
+                    { text: "🌗 A half", isCorrect: false }
+                ],
+                simpleExplanation: "Teaspoon = SMALL spoon (for tea, sugar, or salt)."
+            },
+            {
+                visual: "🥣 🍯",
+                hint: "BIG Spoon",
+                question: "Which word means a BIG spoon (used for soup, oil, or honey)?",
+                options: [
+                    { text: "🥣 A tablespoon", isCorrect: true },
+                    { text: "🥄 A teaspoon", isCorrect: false },
+                    { text: "🌘 A quarter", isCorrect: false },
+                    { text: "🤏 A pinch", isCorrect: false }
+                ],
+                simpleExplanation: "Tablespoon = BIG spoon. It is 3 times bigger than a teaspoon!"
+            },
+            {
+                visual: "🥛 🌾",
+                hint: "Big Measuring Glass",
+                question: "We need a lot of milk and flour for the cake. What do we use?",
+                options: [
+                    { text: "🥛 A cup", isCorrect: true },
+                    { text: "🥄 A teaspoon", isCorrect: false },
+                    { text: "🤏 A pinch", isCorrect: false },
+                    { text: "🧀 A slice", isCorrect: false }
+                ],
+                simpleExplanation: "We use a CUP to measure big amounts of milk, water, flour, or sugar."
+            },
+            {
+                visual: "🌗 = 1/2",
+                hint: "1 of 2 Equal Parts (50%)",
+                question: "Look at the number: 1/2. How do we say '1/2' in English?",
+                options: [
+                    { text: "🌗 A half", isCorrect: true },
+                    { text: "🌘 A quarter", isCorrect: false },
+                    { text: "🥄 A teaspoon", isCorrect: false },
+                    { text: "🥣 A tablespoon", isCorrect: false }
+                ],
+                simpleExplanation: "1/2 is 'A HALF' (one of two equal parts, or 50%)."
+            },
+            {
+                visual: "🌘 = 1/4",
+                hint: "1 of 4 Equal Parts (25%)",
+                question: "Look at the number: 1/4. How do we say '1/4' in English?",
+                options: [
+                    { text: "🌘 A quarter", isCorrect: true },
+                    { text: "🌗 A half", isCorrect: false },
+                    { text: "🥛 A full cup", isCorrect: false },
+                    { text: "🥣 A tablespoon", isCorrect: false }
+                ],
+                simpleExplanation: "1/4 is 'A QUARTER' (one of four equal parts, or 25%)."
+            },
+            {
+                visual: "🍎 🔪 2️⃣",
+                hint: "Cut into 2 Equal Pieces",
+                question: "You cut 1 apple into 2 equal pieces. One piece is ________ of an apple.",
+                options: [
+                    { text: "🌗 a half (1/2)", isCorrect: true },
+                    { text: "🌘 a quarter (1/4)", isCorrect: false },
+                    { text: "🥛 a cup", isCorrect: false },
+                    { text: "🥄 a teaspoon", isCorrect: false }
+                ],
+                simpleExplanation: "2 equal parts = A HALF (1/2)."
+            },
+            {
+                visual: "🍕 🔪 4️⃣",
+                hint: "Cut into 4 Equal Pieces",
+                question: "You cut 1 pizza into 4 equal pieces. One piece is ________ of a pizza.",
+                options: [
+                    { text: "🌘 a quarter (1/4)", isCorrect: true },
+                    { text: "🌗 a half (1/2)", isCorrect: false },
+                    { text: "🥣 a tablespoon", isCorrect: false },
+                    { text: "🥛 a cup", isCorrect: false }
+                ],
+                simpleExplanation: "4 equal parts = A QUARTER (1/4)."
+            },
+            {
+                visual: "🤏 🧂",
+                hint: "Tiny Bit Between 2 Fingers",
+                question: "You take a tiny bit of salt between your two fingers. What is this called?",
+                options: [
+                    { text: "🤏 A pinch of salt", isCorrect: true },
+                    { text: "🥛 A cup of salt", isCorrect: false },
+                    { text: "🌗 Half a salt", isCorrect: false },
+                    { text: "🍞 A slice of salt", isCorrect: false }
+                ],
+                simpleExplanation: "'A pinch of' = a very tiny amount between your fingers!"
+            },
+            {
+                visual: "🥄 vs 🥣",
+                hint: "Compare the Sizes!",
+                question: "Which sentence is TRUE?",
+                options: [
+                    { text: "🥣 A tablespoon is BIGGER than a teaspoon.", isCorrect: true },
+                    { text: "🥄 A teaspoon is BIGGER than a cup.", isCorrect: false },
+                    { text: "🌘 A quarter (1/4) is BIGGER than a half (1/2).", isCorrect: false },
+                    { text: "🤏 A pinch is BIGGER than a cup.", isCorrect: false }
+                ],
+                simpleExplanation: "A tablespoon (big spoon) is bigger than a teaspoon (small spoon)!"
+            },
+            {
+                visual: "🥛 1/2 > 1/4",
+                hint: "50% vs 25%",
+                question: "Look at the glass: 'Half a cup of milk (1/2)' is ________ than 'A quarter cup of milk (1/4)'.",
+                options: [
+                    { text: "⬆️ bigger (more milk)", isCorrect: true },
+                    { text: "⬇️ smaller (less milk)", isCorrect: false },
+                    { text: "🥄 a teaspoon", isCorrect: false },
+                    { text: "🤏 a pinch", isCorrect: false }
+                ],
+                simpleExplanation: "Half a cup (1/2 = 50%) has MORE milk than a quarter cup (1/4 = 25%)!"
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+        let hearts = 3;
+        let correctCount = 0;
+
+        function startGame() {
+            currentQIndex = 0;
+            score = 0;
+            hearts = 3;
+            correctCount = 0;
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('flex');
+
+            const quizScreen = document.getElementById('quiz-screen');
+            quizScreen.classList.remove('hidden');
+            quizScreen.classList.add('flex');
+
+            updateHUD();
+            loadQuestion();
+        }
+
+        function updateHUD() {
+            const heartsContainer = document.getElementById('hearts-container');
+            heartsContainer.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                const s = document.createElement('span');
+                s.textContent = i < hearts ? '❤️' : '🖤';
+                heartsContainer.appendChild(s);
+            }
+            document.getElementById('q-current').textContent = currentQIndex + 1;
+            document.getElementById('score-display').textContent = score;
+            document.getElementById('progress-bar').style.width = `${((currentQIndex + 1) / questions.length) * 100}%`;
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQIndex];
+            document.getElementById('q-visual').textContent = q.visual;
+            document.getElementById('q-hint').textContent = q.hint;
+            document.getElementById('q-text').textContent = q.question;
+            document.getElementById('feedback-box').classList.add('hidden');
+
+            const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+
+            shuffled.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn bg-white hover:bg-purple-50 text-gray-800 font-bold text-lg py-4 px-4 rounded-2xl border-2 border-slate-300 text-left flex items-center justify-between cursor-pointer';
+                btn.innerHTML = `<span>${opt.text}</span>`;
+                btn.onclick = () => selectAnswer(btn, opt, shuffled);
+                grid.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedBtn, selectedOpt, allOptions) {
+            const q = questions[currentQIndex];
+            const buttons = document.getElementById('options-grid').children;
+
+            for (let btn of buttons) {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-purple-50', 'cursor-pointer');
+            }
+
+            const correctOption = allOptions.find(o => o.isCorrect);
+
+            for (let i = 0; i < buttons.length; i++) {
+                if (allOptions[i].isCorrect) {
+                    buttons[i].classList.add('btn-correct');
+                    buttons[i].innerHTML += ` <span>✅</span>`;
+                }
+            }
+
+            const fbBox = document.getElementById('feedback-box');
+            const fbTitle = document.getElementById('fb-title');
+            const fbCorrectAns = document.getElementById('fb-correct-ans');
+            const fbExplanation = document.getElementById('fb-explanation');
+
+            if (selectedOpt.isCorrect) {
+                playSound('correct');
+                correctCount++;
+                score += 100;
+
+                fbBox.className = 'w-full mt-5 p-4 rounded-2xl border-4 bg-green-50 border-green-400 text-green-900 bounce-in block';
+                fbTitle.textContent = '🎉 Super! +100 Points!';
+                fbTitle.className = 'text-lg font-bold text-green-700 mb-1';
+                fbCorrectAns.classList.add('hidden');
+                fbExplanation.textContent = `💡 ${q.simpleExplanation}`;
+            } else {
+                playSound('wrong');
+                selectedBtn.classList.add('btn-wrong', 'shake');
+                selectedBtn.innerHTML += ` <span>❌</span>`;
+                if (hearts > 0) hearts--;
+
+                fbBox.className = 'w-full mt-5 p-4 rounded-2xl border-4 bg-red-50 border-red-400 text-red-900 bounce-in block';
+                fbTitle.textContent = '💡 Let\'s Learn!';
+                fbTitle.className = 'text-lg font-bold text-red-700 mb-1';
+
+                fbCorrectAns.classList.remove('hidden');
+                fbCorrectAns.className = 'text-sm font-bold mb-2 bg-green-200 text-green-900 inline-block px-3 py-1 rounded-lg';
+                fbCorrectAns.innerHTML = `✅ Correct Answer: ${correctOption.text}`;
+
+                fbExplanation.textContent = `Rule: ${q.simpleExplanation}`;
+            }
+
+            updateHUD();
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < questions.length) {
+                updateHUD();
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-screen').classList.add('hidden');
+                document.getElementById('quiz-screen').classList.remove('flex');
+                const endScreen = document.getElementById('end-screen');
+                endScreen.classList.remove('hidden');
+                endScreen.classList.add('flex');
+                document.getElementById('final-score').textContent = score;
+                document.getElementById('final-correct').textContent = `${correctCount}/${questions.length}`;
+            }
+        }
+    </script>
+</body>
+</html>

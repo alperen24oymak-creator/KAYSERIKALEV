@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Machine: Was vs. Were - Topic 7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #c7d2fe 0%, #fbcfe8 50%, #fde68a 100%);
+            min-height: 100vh;
+            user-select: none;
+        }
+        .bounce-in {
+            animation: bounceIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.75); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-3px, 0, 0); }
+            20%, 80% { transform: translate3d(5px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+            40%, 60% { transform: translate3d(8px, 0, 0); }
+        }
+        .option-btn {
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 0 #cbd5e1;
+        }
+        .option-btn:active:not(:disabled) {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #cbd5e1;
+        }
+        .btn-correct {
+            background-color: #22c55e !important;
+            border-color: #15803d !important;
+            color: white !important;
+            box-shadow: 0 5px 0 #166534 !important;
+        }
+        .btn-wrong {
+            background-color: #ef4444 !important;
+            border-color: #b91c1c !important;
+            color: white !important;
+            box-shadow: 0 5px 0 #991b1b !important;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-3 md:p-6">
+
+    <!-- Main Container -->
+    <div id="game-app" class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border-4 border-indigo-600 overflow-hidden">
+
+        <!-- ================= START SCREEN (WITH WAS/WERE RULE TABLE) ================= -->
+        <div id="start-screen" class="p-6 md:p-8 flex flex-col items-center space-y-5">
+            <div class="text-5xl md:text-6xl">⏰ 🚀 🦖 🏰</div>
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-700 text-center">Time Machine: WAS or WERE?</h1>
+            <p class="text-gray-600 font-medium text-center text-base md:text-lg">
+                We use <strong>was</strong> and <strong>were</strong> for the <strong>PAST</strong> (yesterday, last week). Look at the easy rule:
+            </p>
+
+            <!-- SUPER SIMPLE WAS / WERE REMINDER TABLE -->
+            <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- WAS (Singular = 1) -->
+                <div class="bg-blue-50 border-4 border-blue-400 rounded-2xl p-4">
+                    <div class="bg-blue-600 text-white font-bold text-xl py-1.5 px-4 rounded-xl text-center mb-3">
+                        1️⃣ WAS / WASN'T (Only 1)
+                    </div>
+                    <p class="text-sm font-bold text-blue-900 mb-2 text-center">Use for SINGULAR (1 person / 1 thing):</p>
+                    <ul class="space-y-1.5 text-sm md:text-base font-semibold text-gray-800 bg-white p-3 rounded-xl border border-blue-200">
+                        <li>🙋‍♂️ <strong>I</strong> was happy.</li>
+                        <li>👦 <strong>He</strong> was at school.</li>
+                        <li>👧 <strong>She</strong> was tired.</li>
+                        <li>🦖 <strong>It</strong> (1 dino) was big.</li>
+                        <li>🧑 <strong>Ali</strong> (1 boy) was hungry.</li>
+                    </ul>
+                </div>
+
+                <!-- WERE (Plural = 2+) -->
+                <div class="bg-amber-50 border-4 border-amber-400 rounded-2xl p-4">
+                    <div class="bg-amber-500 text-white font-bold text-xl py-1.5 px-4 rounded-xl text-center mb-3">
+                        2️⃣ WERE / WEREN'T (2 or More + You)
+                    </div>
+                    <p class="text-sm font-bold text-amber-900 mb-2 text-center">Use for PLURAL (2+ people / things):</p>
+                    <ul class="space-y-1.5 text-sm md:text-base font-semibold text-gray-800 bg-white p-3 rounded-xl border border-amber-200">
+                        <li>🫵 <strong>You</strong> were fast! <span class="text-xs text-red-600">(Special!)</span></li>
+                        <li>👫 <strong>We</strong> were at the park.</li>
+                        <li>🦕🦖 <strong>They</strong> were huge.</li>
+                        <li>👦👧 <strong>Ali and Ayşe</strong> (2) were happy.</li>
+                        <li>🍎🍎 <strong>The apples</strong> (-s) were red.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full max-w-md bg-indigo-600 hover:bg-indigo-700 text-white text-2xl font-bold py-4 px-8 rounded-2xl shadow-[0_6px_0_#312e81] active:translate-y-1 transition-all cursor-pointer">
+                🚀 START TIME TRAVEL!
+            </button>
+        </div>
+
+        <!-- ================= QUIZ SCREEN ================= -->
+        <div id="quiz-screen" class="hidden flex-col">
+            <!-- Top Bar -->
+            <div class="bg-indigo-600 text-white p-4 flex justify-between items-center">
+                <div id="hearts-container" class="flex space-x-1 text-2xl">
+                    <span>❤️</span><span>❤️</span><span>❤️</span>
+                </div>
+                <div class="bg-indigo-800 px-4 py-1 rounded-full font-bold text-sm md:text-base">
+                    Jump <span id="q-current">1</span> / 12
+                </div>
+                <div class="bg-yellow-400 text-indigo-950 px-3 py-1 rounded-xl font-bold text-lg">
+                    ⭐ <span id="score-display">0</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-indigo-100 h-2.5">
+                <div id="progress-bar" class="bg-amber-400 h-2.5 transition-all duration-300" style="width: 8%;"></div>
+            </div>
+
+            <!-- Question Content -->
+            <div class="p-5 md:p-8 flex flex-col items-center">
+
+                <!-- Visual Box with Singular / Plural Counter Badge -->
+                <div class="w-full bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-4 mb-4 flex flex-col items-center">
+                    <div id="q-visual" class="text-5xl md:text-6xl mb-2">🦖</div>
+                    <span id="q-hint" class="bg-white text-indigo-800 font-bold px-4 py-1 rounded-full text-sm border border-indigo-300">
+                        1️⃣ Singular (Only 1)
+                    </span>
+                </div>
+
+                <!-- Short, Simple Sentence -->
+                <h2 id="q-text" class="text-xl md:text-2xl font-bold text-gray-800 text-center mb-5 leading-snug">
+                    Loading...
+                </h2>
+
+                <!-- Options Grid -->
+                <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full"></div>
+
+                <!-- Immediate Simple Feedback Box -->
+                <div id="feedback-box" class="hidden w-full mt-5 p-4 rounded-2xl border-4 bounce-in">
+                    <h3 id="fb-title" class="text-lg font-bold mb-1">Correct!</h3>
+                    <p id="fb-correct-ans" class="text-sm font-bold mb-1.5 hidden"></p>
+                    <p id="fb-explanation" class="text-base font-medium"></p>
+                    <button onclick="nextQuestion()" class="mt-3 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-[0_4px_0_#312e81] cursor-pointer text-lg">
+                        Next Time Jump ➡️
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= END SCREEN (WITH SUMMARY TABLE) ================= -->
+        <div id="end-screen" class="hidden p-6 md:p-8 flex-col items-center space-y-5">
+            <div class="text-7xl bounce-in">🏆⏰</div>
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-700 text-center">Time Traveler Graduated!</h1>
+
+            <div class="bg-indigo-50 p-4 rounded-2xl border-2 border-indigo-200 w-full max-w-md flex justify-around text-center">
+                <div>
+                    <div class="text-xs font-bold text-gray-500">SCORE</div>
+                    <div id="final-score" class="text-3xl font-bold text-indigo-700">0</div>
+                </div>
+                <div class="border-l-2 border-indigo-200"></div>
+                <div>
+                    <div class="text-xs font-bold text-gray-500">CORRECT</div>
+                    <div id="final-correct" class="text-3xl font-bold text-green-600">0/12</div>
+                </div>
+            </div>
+
+            <!-- Final Reminder Table -->
+            <div class="w-full bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 text-sm space-y-2">
+                <p class="font-bold text-amber-900 text-center text-base">📌 Remember the Golden Rule:</p>
+                <div class="bg-white p-2.5 rounded-xl border border-blue-200">
+                    1️⃣ <strong class="text-blue-700">WAS / WASN'T (Singular = 1):</strong> I, He, She, It, 1 Dinosaur, My cat, Ali
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-amber-200">
+                    2️⃣ <strong class="text-amber-700">WERE / WEREN'T (Plural = 2+):</strong> You, We, They, 2 Dinosaurs, Cats (-s), Ali and Can
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full max-w-md bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold py-4 rounded-2xl shadow-[0_6px_0_#312e81] cursor-pointer">
+                🔄 Play Again!
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+        function playSound(type) {
+            try {
+                if (!audioCtx) audioCtx = new AudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(784, audioCtx.currentTime + 0.12);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } else {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(150, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                }
+            } catch (e) {}
+        }
+
+        // 12 Super Simple A1 Questions for Topic 7: was / were + singular & plural discrimination
+        const questions = [
+            {
+                visual: "🙋‍♂️ 🏠",
+                hint: "1️⃣ 'I' = 1 person (Singular)",
+                question: "Yesterday, I ________ at home.",
+                options: [
+                    { text: "was", isCorrect: true },
+                    { text: "were", isCorrect: false },
+                    { text: "weren't", isCorrect: false },
+                    { text: "are", isCorrect: false }
+                ],
+                simpleExplanation: "With 'I' (1 person), we always use WAS."
+            },
+            {
+                visual: "🦖",
+                hint: "1️⃣ 'T-Rex' = 1 dinosaur (It)",
+                question: "T-Rex ________ a very big dinosaur.",
+                options: [
+                    { text: "was", isCorrect: true },
+                    { text: "were", isCorrect: false },
+                    { text: "weren't", isCorrect: false },
+                    { text: "am", isCorrect: false }
+                ],
+                simpleExplanation: "T-Rex is ONLY 1 dinosaur (It). For 1 thing, we use WAS."
+            },
+            {
+                visual: "🦖 🦕 🦖",
+                hint: "2️⃣ 'Dinosaurs' (-s) = Many (They)",
+                question: "The dinosaurs ________ very big.",
+                options: [
+                    { text: "were", isCorrect: true },
+                    { text: "was", isCorrect: false },
+                    { text: "wasn't", isCorrect: false },
+                    { text: "is", isCorrect: false }
+                ],
+                simpleExplanation: "'Dinosaurs' has '-s' (more than 1 = They). For plural, we use WERE."
+            },
+            {
+                visual: "👧 😢",
+                hint: "1️⃣ 'She' = 1 girl (Singular)",
+                question: "She ________ sad yesterday.",
+                options: [
+                    { text: "was", isCorrect: true },
+                    { text: "were", isCorrect: false },
+                    { text: "weren't", isCorrect: false },
+                    { text: "are", isCorrect: false }
+                ],
+                simpleExplanation: "'She' is 1 girl. With He / She / It, we use WAS."
+            },
+            {
+                visual: "👫 🎡",
+                hint: "2️⃣ 'We' = 2 or more people (Plural)",
+                question: "We ________ at the park last Sunday.",
+                options: [
+                    { text: "were", isCorrect: true },
+                    { text: "was", isCorrect: false },
+                    { text: "wasn't", isCorrect: false },
+                    { text: "is", isCorrect: false }
+                ],
+                simpleExplanation: "'We' means 2 or more people. With We / You / They, we use WERE."
+            },
+            {
+                visual: "👦 👧 😊",
+                hint: "2️⃣ 'Ali and Ayşe' = 2 people (They)",
+                question: "Ali and Ayşe ________ very happy yesterday.",
+                options: [
+                    { text: "were", isCorrect: true },
+                    { text: "was", isCorrect: false },
+                    { text: "wasn't", isCorrect: false },
+                    { text: "is", isCorrect: false }
+                ],
+                simpleExplanation: "Ali + Ayşe = 2 people (They). For 2 people, we use WERE!"
+            },
+            {
+                visual: "👦 🍔",
+                hint: "1️⃣ 'Ali' = Only 1 boy (He)",
+                question: "Ali ________ hungry last night.",
+                options: [
+                    { text: "was", isCorrect: true },
+                    { text: "were", isCorrect: false },
+                    { text: "weren't", isCorrect: false },
+                    { text: "are", isCorrect: false }
+                ],
+                simpleExplanation: "Ali is only 1 boy (He). For 1 person, we use WAS."
+            },
+            {
+                visual: "🫵 ⭐",
+                hint: "⚡ Special Rule for 'YOU'!",
+                question: "You ________ very fast in the game!",
+                options: [
+                    { text: "were", isCorrect: true },
+                    { text: "was", isCorrect: false },
+                    { text: "wasn't", isCorrect: false },
+                    { text: "is", isCorrect: false }
+                ],
+                simpleExplanation: "'YOU' always takes WERE! (You were, Were you?)"
+            },
+            {
+                visual: "🐱 ❌ 🐶",
+                hint: "1️⃣ 'The cat' = 1 animal (Negative -)",
+                question: "The cat ________ big. It was small.",
+                options: [
+                    { text: "wasn't", isCorrect: true },
+                    { text: "weren't", isCorrect: false },
+                    { text: "were", isCorrect: false },
+                    { text: "aren't", isCorrect: false }
+                ],
+                simpleExplanation: "'The cat' is 1 animal (It). In negative, we use WASN'T (was not)."
+            },
+            {
+                visual: "🍎 🍎 ❌",
+                hint: "2️⃣ 'The apples' (-s) = Plural (Negative -)",
+                question: "The apples ________ red. They were green.",
+                options: [
+                    { text: "weren't", isCorrect: true },
+                    { text: "wasn't", isCorrect: false },
+                    { text: "was", isCorrect: false },
+                    { text: "isn't", isCorrect: false }
+                ],
+                simpleExplanation: "'Apples' is plural (more than 1). In negative, we use WEREN'T (were not)."
+            },
+            {
+                visual: "👦 ❓",
+                hint: "1️⃣ Question (?) with 'he' (1 boy)",
+                question: "________ he at school yesterday?",
+                options: [
+                    { text: "Was", isCorrect: true },
+                    { text: "Were", isCorrect: false },
+                    { text: "Weren't", isCorrect: false },
+                    { text: "Are", isCorrect: false }
+                ],
+                simpleExplanation: "Because 'he' is 1 boy, we ask: 'WAS he at school?'"
+            },
+            {
+                visual: "1️⃣ 🦖 vs 2️⃣ 🦕🦖",
+                hint: "1 tail (Singular) vs. 4 legs (Plural -s)",
+                question: "Its tail ________ long, and its legs ________ strong.",
+                options: [
+                    { text: "was / were", isCorrect: true },
+                    { text: "were / was", isCorrect: false },
+                    { text: "was / was", isCorrect: false },
+                    { text: "were / were", isCorrect: false }
+                ],
+                simpleExplanation: "1 tail (singular) ➡️ WAS. 4 legs (plural with -s) ➡️ WERE."
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+        let hearts = 3;
+        let correctCount = 0;
+
+        function startGame() {
+            currentQIndex = 0;
+            score = 0;
+            hearts = 3;
+            correctCount = 0;
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('flex');
+
+            const quizScreen = document.getElementById('quiz-screen');
+            quizScreen.classList.remove('hidden');
+            quizScreen.classList.add('flex');
+
+            updateHUD();
+            loadQuestion();
+        }
+
+        function updateHUD() {
+            const heartsContainer = document.getElementById('hearts-container');
+            heartsContainer.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                const s = document.createElement('span');
+                s.textContent = i < hearts ? '❤️' : '🖤';
+                heartsContainer.appendChild(s);
+            }
+            document.getElementById('q-current').textContent = currentQIndex + 1;
+            document.getElementById('score-display').textContent = score;
+            document.getElementById('progress-bar').style.width = `${((currentQIndex + 1) / questions.length) * 100}%`;
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQIndex];
+            document.getElementById('q-visual').textContent = q.visual;
+            document.getElementById('q-hint').textContent = q.hint;
+            document.getElementById('q-text').textContent = q.question;
+            document.getElementById('feedback-box').classList.add('hidden');
+
+            const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+
+            shuffled.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn bg-white hover:bg-indigo-50 text-gray-800 font-bold text-xl py-4 px-4 rounded-2xl border-2 border-slate-300 text-left flex items-center justify-between cursor-pointer';
+                btn.innerHTML = `<span>${opt.text}</span>`;
+                btn.onclick = () => selectAnswer(btn, opt, shuffled);
+                grid.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedBtn, selectedOpt, allOptions) {
+            const q = questions[currentQIndex];
+            const buttons = document.getElementById('options-grid').children;
+
+            for (let btn of buttons) {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-indigo-50', 'cursor-pointer');
+            }
+
+            const correctOption = allOptions.find(o => o.isCorrect);
+
+            for (let i = 0; i < buttons.length; i++) {
+                if (allOptions[i].isCorrect) {
+                    buttons[i].classList.add('btn-correct');
+                    buttons[i].innerHTML += ` <span>✅</span>`;
+                }
+            }
+
+            const fbBox = document.getElementById('feedback-box');
+            const fbTitle = document.getElementById('fb-title');
+            const fbCorrectAns = document.getElementById('fb-correct-ans');
+            const fbExplanation = document.getElementById('fb-explanation');
+
+            if (selectedOpt.isCorrect) {
+                playSound('correct');
+                correctCount++;
+                score += 100;
+
+                fbBox.className = 'w-full mt-5 p-4 rounded-2xl border-4 bg-green-50 border-green-400 text-green-900 bounce-in block';
+                fbTitle.textContent = '🎉 Super! +100 Points!';
+                fbTitle.className = 'text-lg font-bold text-green-700 mb-1';
+                fbCorrectAns.classList.add('hidden');
+                fbExplanation.textContent = `💡 ${q.simpleExplanation}`;
+            } else {
+                playSound('wrong');
+                selectedBtn.classList.add('btn-wrong', 'shake');
+                selectedBtn.innerHTML += ` <span>❌</span>`;
+                if (hearts > 0) hearts--;
+
+                fbBox.className = 'w-full mt-5 p-4 rounded-2xl border-4 bg-red-50 border-red-400 text-red-950 bounce-in block';
+                fbTitle.textContent = '💡 Look at the Rule!';
+                fbTitle.className = 'text-lg font-bold text-red-700 mb-1';
+
+                fbCorrectAns.classList.remove('hidden');
+                fbCorrectAns.className = 'text-sm font-bold mb-2 bg-green-200 text-green-900 inline-block px-3 py-1 rounded-lg';
+                fbCorrectAns.innerHTML = `✅ Correct Answer: ${correctOption.text}`;
+
+                fbExplanation.textContent = `Rule: ${q.simpleExplanation}`;
+            }
+
+            updateHUD();
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < questions.length) {
+                updateHUD();
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-screen').classList.add('hidden');
+                document.getElementById('quiz-screen').classList.remove('flex');
+                const endScreen = document.getElementById('end-screen');
+                endScreen.classList.remove('hidden');
+                endScreen.classList.add('flex');
+                document.getElementById('final-score').textContent = score;
+                document.getElementById('final-correct').textContent = `${correctCount}/${questions.length}`;
+            }
+        }
+    </script>
+</body>
+</html>

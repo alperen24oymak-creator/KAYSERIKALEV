@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Museum Explorer: Body Parts - Topic 6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #fef3c7 0%, #d9f99d 50%, #a7f3d0 100%);
+            min-height: 100vh;
+            user-select: none;
+        }
+        .bounce-in {
+            animation: bounceIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.75); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-3px, 0, 0); }
+            20%, 80% { transform: translate3d(5px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+            40%, 60% { transform: translate3d(8px, 0, 0); }
+        }
+        .pulse-target {
+            animation: pulseTarget 1.2s infinite ease-in-out;
+        }
+        @keyframes pulseTarget {
+            0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px #ef4444); }
+            50% { opacity: 0.65; filter: drop-shadow(0 0 14px #f97316); }
+        }
+        .option-btn {
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 0 #cbd5e1;
+        }
+        .option-btn:active:not(:disabled) {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #cbd5e1;
+        }
+        .btn-correct {
+            background-color: #22c55e !important;
+            border-color: #15803d !important;
+            color: white !important;
+            box-shadow: 0 5px 0 #166534 !important;
+        }
+        .btn-wrong {
+            background-color: #ef4444 !important;
+            border-color: #b91c1c !important;
+            color: white !important;
+            box-shadow: 0 5px 0 #991b1b !important;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-3 md:p-6">
+
+    <!-- Main Container -->
+    <div id="game-app" class="w-full max-w-3xl bg-white rounded-3xl shadow-2xl border-4 border-emerald-700 overflow-hidden">
+
+        <!-- ================= START SCREEN (WITH DINO BODY PARTS TABLE) ================= -->
+        <div id="start-screen" class="p-5 md:p-8 flex flex-col items-center space-y-5">
+            <div class="text-5xl md:text-6xl">🦖 🦕 🦴 🔍</div>
+            <h1 class="text-3xl md:text-4xl font-bold text-emerald-800 text-center">Dino Body Parts!</h1>
+            <p class="text-gray-600 font-medium text-center max-w-xl text-base md:text-lg">
+                Read the <strong>9 easy words</strong> below, then play the game!
+            </p>
+
+            <!-- DINO BODY PARTS REMINDER TABLE -->
+            <div class="w-full bg-amber-50 border-2 border-amber-300 rounded-2xl p-4">
+                <h3 class="text-lg font-bold text-amber-900 text-center mb-3">📖 Dino Words</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-sm">
+                    <div class="bg-white p-2.5 rounded-xl border border-amber-200">
+                        <span class="text-lg">🦏</span> <strong class="text-emerald-800">Horn:</strong> Pointy part on the head
+                    </div>
+                    <div class="bg-white p-2.5 rounded-xl border border-amber-200">
+                        <span class="text-lg">🛡️</span> <strong class="text-emerald-800">Plate:</strong> Flat part on the back
+                    </div>
+                    <div class="bg-white p-2.5 rounded-xl border border-amber-200">
+                        <span class="text-lg">🌵</span> <strong class="text-emerald-800">Spike:</strong> Sharp needle on the tail
+                    </div>
+                    <div class="bg-white p-2.5 rounded-xl border border-amber-200">
+                        <span class="text-lg">🦕</span> <strong class="text-emerald-800">Neck:</strong> Long part under the head
+                    </div>
+                    <div class="bg-white p-2.5 rounded-xl border border-amber-200">
+                        <span class="text-lg">🦎</span> <strong class="text-emerald-800">Tail:</strong> Long part at the back
+                    </div>
+                    <div class="bg-white p-2.5 rounded-xl border border-amber-200">
+                        <span class="text-lg">🦵</span> <strong class="text-emerald-800">Leg:</strong> For walking and running
+                    </div>
+                    <div class="bg-white p-2.5 rounded-xl border border-amber-200">
+                        <span class="text-lg">🦴</span> <strong class="text-emerald-800">Skeleton:</strong> All the white bones
+                    </div>
+                    <div class="bg-white p-2.5 rounded-xl border border-amber-200">
+                        <span class="text-lg">🦅</span> <strong class="text-emerald-800">Claw:</strong> Sharp nail on hands/feet
+                    </div>
+                    <div class="bg-amber-100 p-2.5 rounded-xl border-2 border-amber-400 sm:col-span-2 md:col-span-1">
+                        <span class="text-lg">🦷</span> <strong class="text-red-700">1 Tooth ➡️ Many Teeth:</strong> In the mouth!
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full max-w-md bg-emerald-600 hover:bg-emerald-700 text-white text-2xl font-bold py-4 px-8 rounded-2xl shadow-[0_6px_0_#065f46] active:translate-y-1 transition-all cursor-pointer">
+                🦖 START GAME!
+            </button>
+        </div>
+
+        <!-- ================= QUIZ SCREEN ================= -->
+        <div id="quiz-screen" class="hidden flex-col">
+            <!-- Top Bar -->
+            <div class="bg-emerald-700 text-white p-4 flex justify-between items-center">
+                <div id="hearts-container" class="flex space-x-1 text-2xl">
+                    <span>❤️</span><span>❤️</span><span>❤️</span>
+                </div>
+                <div class="bg-emerald-900 px-4 py-1 rounded-full font-bold text-sm md:text-base">
+                    Fossil <span id="q-current">1</span> / 12
+                </div>
+                <div class="bg-yellow-400 text-emerald-950 px-3 py-1 rounded-xl font-bold text-lg">
+                    ⭐ <span id="score-display">0</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-emerald-100 h-2.5">
+                <div id="progress-bar" class="bg-amber-400 h-2.5 transition-all duration-300" style="width: 8%;"></div>
+            </div>
+
+            <!-- Question Content -->
+            <div class="p-5 md:p-8 flex flex-col items-center max-w-2xl mx-auto w-full">
+
+                <!-- Interactive Visual Dino Scanner Screen -->
+                <div class="w-full bg-slate-900 border-4 border-emerald-500 rounded-2xl p-4 mb-4 flex flex-col items-center justify-center relative shadow-inner">
+                    <div class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-1">
+                        🔍 DINO X-RAY SCANNER (LOOK AT THE RED GLOWING PART!)
+                    </div>
+                    <!-- Dynamic SVG Diagram Container -->
+                    <div id="dino-svg-box" class="w-full max-w-xs h-36 flex items-center justify-center"></div>
+                    <span id="q-hint" class="bg-emerald-800 text-emerald-100 font-bold px-3 py-1 rounded-full text-xs md:text-sm mt-2">
+                        Hint
+                    </span>
+                </div>
+
+                <!-- Question Text -->
+                <h2 id="q-text" class="text-xl md:text-2xl font-bold text-gray-800 text-center mb-5 leading-snug">
+                    Loading...
+                </h2>
+
+                <!-- 4 Simple Options -->
+                <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full"></div>
+
+                <!-- Immediate Simple Feedback Box -->
+                <div id="feedback-box" class="hidden w-full mt-5 p-4 rounded-2xl border-4 bounce-in">
+                    <h3 id="fb-title" class="text-lg font-bold mb-1">Correct!</h3>
+                    <p id="fb-correct-ans" class="text-sm font-bold mb-1.5 hidden"></p>
+                    <p id="fb-explanation" class="text-base font-medium"></p>
+                    <button onclick="nextQuestion()" class="mt-3 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-[0_4px_0_#065f46] cursor-pointer text-lg">
+                        Next Dinosaur ➡️
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= END SCREEN ================= -->
+        <div id="end-screen" class="hidden p-6 md:p-8 flex-col items-center space-y-5">
+            <div class="text-7xl bounce-in">🦖🏆🦴</div>
+            <h1 class="text-3xl md:text-4xl font-bold text-emerald-800 text-center">Dino Expert Graduated!</h1>
+
+            <div class="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200 w-full max-w-md flex justify-around text-center">
+                <div>
+                    <div class="text-xs font-bold text-gray-500">SCORE</div>
+                    <div id="final-score" class="text-3xl font-bold text-emerald-700">0</div>
+                </div>
+                <div class="border-l-2 border-emerald-200"></div>
+                <div>
+                    <div class="text-xs font-bold text-gray-500">CORRECT</div>
+                    <div id="final-correct" class="text-3xl font-bold text-green-600">0/12</div>
+                </div>
+            </div>
+
+            <!-- Final Summary Table -->
+            <div class="w-full bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 text-xs md:text-sm space-y-1.5">
+                <p class="font-bold text-amber-900 text-center text-base mb-1">📌 Dino Body Parts Review:</p>
+                <p>🦏 <strong>Horn:</strong> Pointy part on the head | 🛡️ <strong>Plate:</strong> Flat armor on the back | 🌵 <strong>Spike:</strong> Sharp needle on the tail</p>
+                <p>🦕 <strong>Neck:</strong> Long part under the head | 🦎 <strong>Tail:</strong> Long part at the back | 🦵 <strong>Leg:</strong> For walking/running</p>
+                <p>🦴 <strong>Skeleton:</strong> All the bones | 🦅 <strong>Claw:</strong> Sharp nail on fingers/toes | 🦷 <strong>1 Tooth ➡️ Many Teeth!</strong></p>
+            </div>
+
+            <button onclick="startGame()" class="w-full max-w-md bg-emerald-600 hover:bg-emerald-700 text-white text-xl font-bold py-4 rounded-2xl shadow-[0_6px_0_#065f46] cursor-pointer">
+                🔄 Play Again!
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+        function playSound(type) {
+            try {
+                if (!audioCtx) audioCtx = new AudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(784, audioCtx.currentTime + 0.12);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } else {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(150, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                }
+            } catch (e) {}
+        }
+
+        // Custom SVG diagrams highlighting the exact dinosaur body part in glowing RED (#ef4444)
+        function getDinoSVG(part) {
+            switch(part) {
+                case 'horn':
+                    return `<svg viewBox="0 0 240 120" class="w-full h-full">
+                        <!-- Triceratops Head & Frill -->
+                        <path d="M80,90 Q60,30 110,25 Q130,50 125,85 Z" fill="#4ade80" stroke="#166534" stroke-width="3"/>
+                        <ellipse cx="135" cy="70" rx="40" ry="25" fill="#4ade80" stroke="#166534" stroke-width="3"/>
+                        <circle cx="135" cy="62" r="4" fill="#000"/>
+                        <!-- Glowing Red Horns -->
+                        <polygon points="145,52 195,22 155,62" fill="#ef4444" class="pulse-target"/>
+                        <polygon points="130,48 175,15 140,56" fill="#ef4444" class="pulse-target"/>
+                        <polygon points="168,62 190,45 174,70" fill="#ef4444" class="pulse-target"/>
+                    </svg>`;
+                case 'plate':
+                    return `<svg viewBox="0 0 240 120" class="w-full h-full">
+                        <!-- Stegosaurus Body -->
+                        <path d="M30,85 Q110,35 180,85 L205,85 L180,95 L40,95 Z" fill="#4ade80" stroke="#166534" stroke-width="3"/>
+                        <rect x="65" y="90" width="14" height="22" rx="4" fill="#22c55e"/>
+                        <rect x="145" y="90" width="14" height="22" rx="4" fill="#22c55e"/>
+                        <!-- Glowing Red Back Plates -->
+                        <polygon points="75,60 90,25 105,55" fill="#ef4444" class="pulse-target"/>
+                        <polygon points="105,53 122,18 138,53" fill="#ef4444" class="pulse-target"/>
+                        <polygon points="138,55 155,25 168,62" fill="#ef4444" class="pulse-target"/>
+                    </svg>`;
+                case 'spike':
+                    return `<svg viewBox="0 0 240 120" class="w-full h-full">
+                        <!-- Dino Tail with Glowing Spikes -->
+                        <path d="M20,75 Q100,70 195,45 Q130,95 20,95 Z" fill="#4ade80" stroke="#166534" stroke-width="3"/>
+                        <!-- Glowing Spikes on Tail -->
+                        <polygon points="155,55 175,20 172,50" fill="#ef4444" class="pulse-target"/>
+                        <polygon points="175,50 205,18 188,48" fill="#ef4444" class="pulse-target"/>
+                        <polygon points="175,65 215,58 185,75" fill="#ef4444" class="pulse-target"/>
+                    </svg>`;
+                case 'neck':
+                    return `<svg viewBox="0 0 240 120" class="w-full h-full">
+                        <!-- Brachiosaurus Body -->
+                        <ellipse cx="90" cy="85" rx="42" ry="22" fill="#4ade80"/>
+                        <rect x="65" y="95" width="12" height="20" fill="#22c55e"/>
+                        <rect x="105" y="95" width="12" height="20" fill="#22c55e"/>
+                        <!-- Glowing Long Neck -->
+                        <path d="M115,75 L155,18 L170,22 L130,85 Z" fill="#ef4444" class="pulse-target"/>
+                        <!-- Head -->
+                        <ellipse cx="170" cy="18" rx="14" ry="8" fill="#4ade80"/>
+                        <circle cx="173" cy="16" r="2.5" fill="#000"/>
+                    </svg>`;
+                case 'tail':
+                    return `<svg viewBox="0 0 240 120" class="w-full h-full">
+                        <!-- Glowing Long Tail -->
+                        <path d="M15,35 Q65,65 115,65 L115,85 Q55,85 15,35 Z" fill="#ef4444" class="pulse-target"/>
+                        <!-- Dino Body & Head -->
+                        <ellipse cx="145" cy="72" rx="35" ry="22" fill="#4ade80"/>
+                        <rect x="135" y="88" width="14" height="24" fill="#22c55e"/>
+                        <rect x="160" y="40" width="35" height="24" rx="8" fill="#4ade80"/>
+                        <circle cx="182" cy="48" r="3" fill="#000"/>
+                    </svg>`;
+                case 'leg':
+                    return `<svg viewBox="0 0 240 120" class="w-full h-full">
+                        <!-- Dino Body -->
+                        <ellipse cx="120" cy="55" rx="48" ry="24" fill="#4ade80"/>
+                        <!-- Glowing Legs -->
+                        <rect x="85" y="70" width="18" height="42" rx="6" fill="#ef4444" class="pulse-target"/>
+                        <rect x="135" y="70" width="18" height="42" rx="6" fill="#ef4444" class="pulse-target"/>
+                    </svg>`;
+                case 'skeleton':
+                    return `<svg viewBox="0 0 240 120" class="w-full h-full">
+                        <!-- Glowing White/Red Bone Skeleton -->
+                        <g class="pulse-target" stroke="#f8fafc" stroke-width="5" fill="none" stroke-linecap="round">
+                            <path d="M35,65 Q110,45 175,60"/>
+                            <line x1="75" y1="53" x2="75" y2="82"/>
+                            <line x1="95" y1="50" x2="95" y2="85"/>
+                            <line x1="115" y1="50" x2="115" y2="85"/>
+                            <line x1="135" y1="53" x2="135" y2="82"/>
+                            <rect x="170" y="38" width="32" height="22" rx="5" fill="#f8fafc"/>
+                        </g>
+                        <circle cx="190" cy="46" r="4" fill="#0f172a"/>
+                    </svg>`;
+                case 'claw':
+                    return `<svg viewBox="0 0 240 120" class="w-full h-full">
+                        <!-- Dino Foot -->
+                        <path d="M85,20 L85,75 L155,75 L140,55 L115,55 L115,20 Z" fill="#4ade80"/>
+                        <!-- 3 Sharp Curved Glowing Red Claws -->
+                        <path d="M150,62 Q185,65 190,85 Q165,80 150,75 Z" fill="#ef4444" class="pulse-target"/>
+                        <path d="M145,72 Q180,78 182,96 Q160,90 142,82 Z" fill="#ef4444" class="pulse-target"/>
+                        <path d="M130,75 Q160,85 162,102 Q140,95 125,82 Z" fill="#ef4444" class="pulse-target"/>
+                    </svg>`;
+                case 'tooth':
+                case 'teeth':
+                    return `<svg viewBox="0 0 240 120" class="w-full h-full">
+                        <!-- T-Rex Open Jaw -->
+                        <path d="M50,25 L185,25 L185,50 L90,55 L185,80 L185,100 L50,90 Z" fill="#4ade80"/>
+                        <circle cx="85" cy="36" r="4" fill="#000"/>
+                        <!-- Glowing Sharp Teeth -->
+                        <polygon points="110,50 118,68 126,50" fill="#ef4444" class="pulse-target"/>
+                        <polygon points="130,50 138,68 146,50" fill="#ef4444" class="pulse-target"/>
+                        <polygon points="150,50 158,68 166,50" fill="#ef4444" class="pulse-target"/>
+                        <polygon points="170,50 176,68 182,50" fill="#ef4444" class="pulse-target"/>
+                    </svg>`;
+            }
+        }
+
+        // 12 Super Simple A1 Questions for Topic 6: horn, plate, spike, neck, tail, leg, skeleton, claw, tooth, teeth
+        const questions = [
+            {
+                part: "horn",
+                hint: "On the head",
+                question: "Look at the red part. It has 3 sharp ________ on its head.",
+                options: [
+                    { text: "🦏 horns", isCorrect: true },
+                    { text: "🦎 tails", isCorrect: false },
+                    { text: "🦵 legs", isCorrect: false },
+                    { text: "🦕 necks", isCorrect: false }
+                ],
+                simpleExplanation: "A HORN is on the dinosaur's head."
+            },
+            {
+                part: "neck",
+                hint: "Under the head",
+                question: "Look at the red part. This dinosaur has a very long ________.",
+                options: [
+                    { text: "🦕 neck", isCorrect: true },
+                    { text: "🦷 tooth", isCorrect: false },
+                    { text: "🦅 claw", isCorrect: false },
+                    { text: "🦏 horn", isCorrect: false }
+                ],
+                simpleExplanation: "The NECK is the long part under the head."
+            },
+            {
+                part: "plate",
+                hint: "Flat shapes on the back",
+                question: "Look at the dinosaur's back. It has flat ________ on its back.",
+                options: [
+                    { text: "🛡️ plates", isCorrect: true },
+                    { text: "🦷 teeth", isCorrect: false },
+                    { text: "🦵 legs", isCorrect: false },
+                    { text: "🦕 necks", isCorrect: false }
+                ],
+                simpleExplanation: "PLATES are flat shapes on the dinosaur's back."
+            },
+            {
+                part: "spike",
+                hint: "Sharp needles on the tail",
+                question: "Look at the tail. It has sharp ________ on its tail.",
+                options: [
+                    { text: "🌵 spikes", isCorrect: true },
+                    { text: "🦕 necks", isCorrect: false },
+                    { text: "🦴 skeletons", isCorrect: false },
+                    { text: "🦵 legs", isCorrect: false }
+                ],
+                simpleExplanation: "A SPIKE is like a sharp needle."
+            },
+            {
+                part: "tail",
+                hint: "At the back of the body",
+                question: "Look at the red part at the back. It is a long ________.",
+                options: [
+                    { text: "🦎 tail", isCorrect: true },
+                    { text: "🦏 horn", isCorrect: false },
+                    { text: "🦷 tooth", isCorrect: false },
+                    { text: "🦕 neck", isCorrect: false }
+                ],
+                simpleExplanation: "The TAIL is at the back of the body."
+            },
+            {
+                part: "claw",
+                hint: "Sharp nails on the foot",
+                question: "Look at the foot. The dinosaur has sharp nails called ________.",
+                options: [
+                    { text: "🦅 claws", isCorrect: true },
+                    { text: "🛡️ plates", isCorrect: false },
+                    { text: "🦕 necks", isCorrect: false },
+                    { text: "🦏 horns", isCorrect: false }
+                ],
+                simpleExplanation: "CLAWS are sharp nails on hands and feet."
+            },
+            {
+                part: "skeleton",
+                hint: "All the white bones",
+                question: "Look at all the white bones. What is this?",
+                options: [
+                    { text: "🦴 A skeleton", isCorrect: true },
+                    { text: "🛡️ A plate", isCorrect: false },
+                    { text: "🦏 A horn", isCorrect: false },
+                    { text: "🦅 A claw", isCorrect: false }
+                ],
+                simpleExplanation: "A SKELETON is all the bones in the body."
+            },
+            {
+                part: "leg",
+                hint: "For walking and running",
+                question: "The dinosaur walks and runs with its two strong ________.",
+                options: [
+                    { text: "🦵 legs", isCorrect: true },
+                    { text: "🦏 horns", isCorrect: false },
+                    { text: "🛡️ plates", isCorrect: false },
+                    { text: "🦷 teeth", isCorrect: false }
+                ],
+                simpleExplanation: "Dinosaurs use their LEGS to walk and run."
+            },
+            {
+                part: "tooth",
+                hint: "Only 1 (Singular)",
+                question: "The baby dinosaur has ONLY ONE white ________ in its mouth.",
+                options: [
+                    { text: "🦷 tooth", isCorrect: true },
+                    { text: "🦷 teeth", isCorrect: false },
+                    { text: "🦷 tooths", isCorrect: false },
+                    { text: "🦅 claw", isCorrect: false }
+                ],
+                simpleExplanation: "For 1, we say ONE TOOTH."
+            },
+            {
+                part: "teeth",
+                hint: "Many (Plural)",
+                question: "T-Rex has 60 sharp ________ in its mouth!",
+                options: [
+                    { text: "🦷 teeth", isCorrect: true },
+                    { text: "🦷 tooth", isCorrect: false },
+                    { text: "🦷 tooths", isCorrect: false },
+                    { text: "🦷 teeths", isCorrect: false }
+                ],
+                simpleExplanation: "1 tooth ➡️ Many TEETH! (Never say 'tooths' ❌)."
+            },
+            {
+                part: "claw",
+                hint: "Hand and Foot",
+                question: "Which part is on a dinosaur's HAND or FOOT?",
+                options: [
+                    { text: "🦅 A claw", isCorrect: true },
+                    { text: "🦏 A horn", isCorrect: false },
+                    { text: "🦷 Teeth", isCorrect: false },
+                    { text: "🦕 A neck", isCorrect: false }
+                ],
+                simpleExplanation: "CLAWS are on the hands and feet."
+            },
+            {
+                part: "plate",
+                hint: "Back & Tail",
+                question: "It has flat ________ on its back and sharp ________ on its tail.",
+                options: [
+                    { text: "🛡️ plates / 🌵 spikes", isCorrect: true },
+                    { text: "🦷 teeth / 🦕 necks", isCorrect: false },
+                    { text: "🦵 legs / 🦴 skeletons", isCorrect: false },
+                    { text: "🦏 horns / 🦷 tooth", isCorrect: false }
+                ],
+                simpleExplanation: "PLATES are flat on the back. SPIKES are sharp on the tail."
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+        let hearts = 3;
+        let correctCount = 0;
+
+        function startGame() {
+            currentQIndex = 0;
+            score = 0;
+            hearts = 3;
+            correctCount = 0;
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('flex');
+
+            const quizScreen = document.getElementById('quiz-screen');
+            quizScreen.classList.remove('hidden');
+            quizScreen.classList.add('flex');
+
+            updateHUD();
+            loadQuestion();
+        }
+
+        function updateHUD() {
+            const heartsContainer = document.getElementById('hearts-container');
+            heartsContainer.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                const s = document.createElement('span');
+                s.textContent = i < hearts ? '❤️' : '🖤';
+                heartsContainer.appendChild(s);
+            }
+            document.getElementById('q-current').textContent = currentQIndex + 1;
+            document.getElementById('score-display').textContent = score;
+            document.getElementById('progress-bar').style.width = `${((currentQIndex + 1) / questions.length) * 100}%`;
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQIndex];
+            document.getElementById('dino-svg-box').innerHTML = getDinoSVG(q.part);
+            document.getElementById('q-hint').textContent = `💡 Hint: ${q.hint}`;
+            document.getElementById('q-text').textContent = q.question;
+            document.getElementById('feedback-box').classList.add('hidden');
+
+            const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+
+            shuffled.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn bg-white hover:bg-emerald-50 text-gray-800 font-bold text-lg py-4 px-4 rounded-2xl border-2 border-slate-300 text-left flex items-center justify-between cursor-pointer';
+                btn.innerHTML = `<span>${opt.text}</span>`;
+                btn.onclick = () => selectAnswer(btn, opt, shuffled);
+                grid.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedBtn, selectedOpt, allOptions) {
+            const q = questions[currentQIndex];
+            const buttons = document.getElementById('options-grid').children;
+
+            for (let btn of buttons) {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-emerald-50', 'cursor-pointer');
+            }
+
+            const correctOption = allOptions.find(o => o.isCorrect);
+
+            for (let i = 0; i < buttons.length; i++) {
+                if (allOptions[i].isCorrect) {
+                    buttons[i].classList.add('btn-correct');
+                    buttons[i].innerHTML += ` <span>✅</span>`;
+                }
+            }
+
+            const fbBox = document.getElementById('feedback-box');
+            const fbTitle = document.getElementById('fb-title');
+            const fbCorrectAns = document.getElementById('fb-correct-ans');
+            const fbExplanation = document.getElementById('fb-explanation');
+
+            if (selectedOpt.isCorrect) {
+                playSound('correct');
+                correctCount++;
+                score += 100;
+
+                fbBox.className = 'w-full mt-5 p-4 rounded-2xl border-4 bg-green-50 border-green-400 text-green-900 bounce-in block';
+                fbTitle.textContent = '🎉 Roar-some! +100 Points!';
+                fbTitle.className = 'text-lg font-bold text-green-700 mb-1';
+                fbCorrectAns.classList.add('hidden');
+                fbExplanation.textContent = `💡 ${q.simpleExplanation}`;
+            } else {
+                playSound('wrong');
+                selectedBtn.classList.add('btn-wrong', 'shake');
+                selectedBtn.innerHTML += ` <span>❌</span>`;
+                if (hearts > 0) hearts--;
+
+                fbBox.className = 'w-full mt-5 p-4 rounded-2xl border-4 bg-red-50 border-red-400 text-red-950 bounce-in block';
+                fbTitle.textContent = '💡 Let\'s Learn This Dino Part!';
+                fbTitle.className = 'text-lg font-bold text-red-700 mb-1';
+
+                fbCorrectAns.classList.remove('hidden');
+                fbCorrectAns.className = 'text-sm font-bold mb-2 bg-green-200 text-green-900 inline-block px-3 py-1 rounded-lg';
+                fbCorrectAns.innerHTML = `✅ Correct Answer: ${correctOption.text}`;
+
+                fbExplanation.textContent = `Simple Rule: ${q.simpleExplanation}`;
+            }
+
+            updateHUD();
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < questions.length) {
+                updateHUD();
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-screen').classList.add('hidden');
+                document.getElementById('quiz-screen').classList.remove('flex');
+                const endScreen = document.getElementById('end-screen');
+                endScreen.classList.remove('hidden');
+                endScreen.classList.add('flex');
+                document.getElementById('final-score').textContent = score;
+                document.getElementById('final-correct').textContent = `${correctCount}/${questions.length}`;
+            }
+        }
+    </script>
+</body>
+</html>

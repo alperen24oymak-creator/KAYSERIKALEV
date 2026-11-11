@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino World: There was vs. There were - Topic 8</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #fed7aa 0%, #fde68a 50%, #bbf7d0 100%);
+            min-height: 100vh;
+            user-select: none;
+        }
+        .bounce-in {
+            animation: bounceIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.75); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-3px, 0, 0); }
+            20%, 80% { transform: translate3d(5px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+            40%, 60% { transform: translate3d(8px, 0, 0); }
+        }
+        .option-btn {
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 0 #cbd5e1;
+        }
+        .option-btn:active:not(:disabled) {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #cbd5e1;
+        }
+        .btn-correct {
+            background-color: #22c55e !important;
+            border-color: #15803d !important;
+            color: white !important;
+            box-shadow: 0 5px 0 #166534 !important;
+        }
+        .btn-wrong {
+            background-color: #ef4444 !important;
+            border-color: #b91c1c !important;
+            color: white !important;
+            box-shadow: 0 5px 0 #991b1b !important;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-3 md:p-6">
+
+    <!-- Main Container -->
+    <div id="game-app" class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border-4 border-teal-600 overflow-hidden">
+
+        <!-- ================= START SCREEN (WITH THERE WAS / THERE WERE RULE TABLE) ================= -->
+        <div id="start-screen" class="p-6 md:p-8 flex flex-col items-center space-y-5">
+            <div class="text-5xl md:text-6xl">🌋 🦖 🦕 🔍</div>
+            <h1 class="text-3xl md:text-4xl font-bold text-teal-700 text-center">Dino World: There was / There were</h1>
+            <p class="text-gray-600 font-medium text-center text-base md:text-lg">
+                We use <strong>There was</strong> and <strong>There were</strong> to say what existed in the <strong>PAST</strong> ("vardı"). Look at the easy rule:
+            </p>
+
+            <!-- SUPER SIMPLE THERE WAS / THERE WERE REMINDER TABLE -->
+            <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- THERE WAS (Singular = 1 or Uncountable) -->
+                <div class="bg-teal-50 border-4 border-teal-400 rounded-2xl p-4">
+                    <div class="bg-teal-600 text-white font-bold text-lg md:text-xl py-1.5 px-3 rounded-xl text-center mb-3">
+                        1️⃣ THERE WAS / WASN'T
+                    </div>
+                    <p class="text-xs md:text-sm font-bold text-teal-900 mb-2 text-center">Use for ONLY 1 thing (a/an) or Uncountable:</p>
+                    <ul class="space-y-1.5 text-sm md:text-base font-semibold text-gray-800 bg-white p-3 rounded-xl border border-teal-200">
+                        <li>🦖 <strong>There was</strong> <u>a</u> dinosaur.</li>
+                        <li>🍎 <strong>There was</strong> <u>an</u> apple.</li>
+                        <li>🥛 <strong>There was</strong> some milk. <span class="text-xs text-teal-700">(Uncount.)</span></li>
+                        <li>❌ <strong>There wasn't</strong> <u>a</u> car.</li>
+                        <li>❓ <strong>Was there</strong> <u>a</u> tree?</li>
+                    </ul>
+                </div>
+
+                <!-- THERE WERE (Plural = 2+) -->
+                <div class="bg-orange-50 border-4 border-orange-400 rounded-2xl p-4">
+                    <div class="bg-orange-500 text-white font-bold text-lg md:text-xl py-1.5 px-3 rounded-xl text-center mb-3">
+                        2️⃣ THERE WERE / WEREN'T
+                    </div>
+                    <p class="text-xs md:text-sm font-bold text-orange-900 mb-2 text-center">Use for 2 or MORE things (Plural -s):</p>
+                    <ul class="space-y-1.5 text-sm md:text-base font-semibold text-gray-800 bg-white p-3 rounded-xl border border-orange-200">
+                        <li>🦕🦖 <strong>There were</strong> two dinosaur<u>s</u>.</li>
+                        <li>🌴🌴 <strong>There were</strong> many tree<u>s</u>.</li>
+                        <li>🍪🍪 <strong>There were</strong> some cookie<u>s</u>.</li>
+                        <li>❌ <strong>There weren't</strong> any phone<u>s</u>.</li>
+                        <li>❓ <strong>Were there</strong> any bird<u>s</u>?</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full max-w-md bg-teal-600 hover:bg-teal-700 text-white text-2xl font-bold py-4 px-8 rounded-2xl shadow-[0_6px_0_#115e59] active:translate-y-1 transition-all cursor-pointer">
+                🌋 START DINO DETECTIVE!
+            </button>
+        </div>
+
+        <!-- ================= QUIZ SCREEN ================= -->
+        <div id="quiz-screen" class="hidden flex-col">
+            <!-- Top Bar -->
+            <div class="bg-teal-600 text-white p-4 flex justify-between items-center">
+                <div id="hearts-container" class="flex space-x-1 text-2xl">
+                    <span>❤️</span><span>❤️</span><span>❤️</span>
+                </div>
+                <div class="bg-teal-800 px-4 py-1 rounded-full font-bold text-sm md:text-base">
+                    Clue <span id="q-current">1</span> / 12
+                </div>
+                <div class="bg-yellow-400 text-teal-950 px-3 py-1 rounded-xl font-bold text-lg">
+                    ⭐ <span id="score-display">0</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-teal-100 h-2.5">
+                <div id="progress-bar" class="bg-orange-400 h-2.5 transition-all duration-300" style="width: 8%;"></div>
+            </div>
+
+            <!-- Question Content -->
+            <div class="p-5 md:p-8 flex flex-col items-center">
+
+                <!-- Visual Box with Singular / Plural Counter Badge -->
+                <div class="w-full bg-teal-50 border-2 border-teal-200 rounded-2xl p-4 mb-4 flex flex-col items-center">
+                    <div id="q-visual" class="text-5xl md:text-6xl mb-2">🌋</div>
+                    <span id="q-hint" class="bg-white text-teal-800 font-bold px-4 py-1 rounded-full text-sm border border-teal-300">
+                        1️⃣ Singular (Only 1)
+                    </span>
+                </div>
+
+                <!-- Short, Simple Sentence -->
+                <h2 id="q-text" class="text-xl md:text-2xl font-bold text-gray-800 text-center mb-5 leading-snug">
+                    Loading...
+                </h2>
+
+                <!-- Options Grid -->
+                <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full"></div>
+
+                <!-- Immediate Simple Feedback Box -->
+                <div id="feedback-box" class="hidden w-full mt-5 p-4 rounded-2xl border-4 bounce-in">
+                    <h3 id="fb-title" class="text-lg font-bold mb-1">Correct!</h3>
+                    <p id="fb-correct-ans" class="text-sm font-bold mb-1.5 hidden"></p>
+                    <p id="fb-explanation" class="text-base font-medium"></p>
+                    <button onclick="nextQuestion()" class="mt-3 w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl shadow-[0_4px_0_#115e59] cursor-pointer text-lg">
+                        Next Clue ➡️
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= END SCREEN (WITH SUMMARY TABLE) ================= -->
+        <div id="end-screen" class="hidden p-6 md:p-8 flex-col items-center space-y-5">
+            <div class="text-7xl bounce-in">🏆🦖</div>
+            <h1 class="text-3xl md:text-4xl font-bold text-teal-700 text-center">All 8 Topics Completed!</h1>
+            <p class="text-gray-600 font-medium text-center">You mastered <strong>There was</strong> and <strong>There were</strong>!</p>
+
+            <div class="bg-teal-50 p-4 rounded-2xl border-2 border-teal-200 w-full max-w-md flex justify-around text-center">
+                <div>
+                    <div class="text-xs font-bold text-gray-500">SCORE</div>
+                    <div id="final-score" class="text-3xl font-bold text-teal-700">0</div>
+                </div>
+                <div class="border-l-2 border-teal-200"></div>
+                <div>
+                    <div class="text-xs font-bold text-gray-500">CORRECT</div>
+                    <div id="final-correct" class="text-3xl font-bold text-green-600">0/12</div>
+                </div>
+            </div>
+
+            <!-- Final Reminder Table -->
+            <div class="w-full bg-orange-50 border-2 border-orange-300 rounded-2xl p-4 text-sm space-y-2">
+                <p class="font-bold text-orange-900 text-center text-base">📌 Remember the Easy Rule:</p>
+                <div class="bg-white p-2.5 rounded-xl border border-teal-200">
+                    1️⃣ <strong class="text-teal-700">There was / There wasn't:</strong> Only 1 thing (a dinosaur, an apple) OR Uncountable (some milk, some water)
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-orange-200">
+                    2️⃣ <strong class="text-orange-700">There were / There weren't:</strong> 2 or more things with <strong>-s</strong> (two dinosaurs, many trees, some cookies)
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full max-w-md bg-teal-600 hover:bg-teal-700 text-white text-xl font-bold py-4 rounded-2xl shadow-[0_6px_0_#115e59] cursor-pointer">
+                🔄 Play Again!
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+        function playSound(type) {
+            try {
+                if (!audioCtx) audioCtx = new AudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(784, audioCtx.currentTime + 0.12);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } else {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(150, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                }
+            } catch (e) {}
+        }
+
+        // 12 Super Simple A1 Questions for Topic 8: There was / There were
+        const questions = [
+            {
+                visual: "🦖",
+                hint: "1️⃣ 'a big T-Rex' = Only 1",
+                question: "________ a big T-Rex in the forest.",
+                options: [
+                    { text: "There was", isCorrect: true },
+                    { text: "There were", isCorrect: false },
+                    { text: "There weren't", isCorrect: false },
+                    { text: "Were there", isCorrect: false }
+                ],
+                simpleExplanation: "'A big T-Rex' is ONLY 1 dinosaur. For 1 thing, we use THERE WAS."
+            },
+            {
+                visual: "🦕 🦕 🦕",
+                hint: "2️⃣ 'three dinosaurs' (-s) = Plural (3)",
+                question: "________ three dinosaurs near the river.",
+                options: [
+                    { text: "There were", isCorrect: true },
+                    { text: "There was", isCorrect: false },
+                    { text: "There wasn't", isCorrect: false },
+                    { text: "Was there", isCorrect: false }
+                ],
+                simpleExplanation: "'Three dinosaurs' is plural (more than 1, with -s). We use THERE WERE."
+            },
+            {
+                visual: "🌋",
+                hint: "1️⃣ 'a big volcano' = Only 1",
+                question: "________ a big volcano on the island.",
+                options: [
+                    { text: "There was", isCorrect: true },
+                    { text: "There were", isCorrect: false },
+                    { text: "There weren't", isCorrect: false },
+                    { text: "Were there", isCorrect: false }
+                ],
+                simpleExplanation: "'A big volcano' is 1 volcano. For 1 thing, we use THERE WAS."
+            },
+            {
+                visual: "🌴 🌴 🌴 🌴",
+                hint: "2️⃣ 'many green trees' (-s) = Plural",
+                question: "________ many green trees in the park.",
+                options: [
+                    { text: "There were", isCorrect: true },
+                    { text: "There was", isCorrect: false },
+                    { text: "There wasn't", isCorrect: false },
+                    { text: "Was there", isCorrect: false }
+                ],
+                simpleExplanation: "'Trees' has '-s' (more than 1). For plural nouns, we use THERE WERE."
+            },
+            {
+                visual: "🍎 🍽️",
+                hint: "1️⃣ 'an apple' = Only 1",
+                question: "________ an apple on the plate yesterday.",
+                options: [
+                    { text: "There was", isCorrect: true },
+                    { text: "There were", isCorrect: false },
+                    { text: "There weren't", isCorrect: false },
+                    { text: "Were there", isCorrect: false }
+                ],
+                simpleExplanation: "'An apple' is only 1 apple. So we use THERE WAS."
+            },
+            {
+                visual: "🍪 🍪 🍪",
+                hint: "2️⃣ 'five cookies' (-s) = Plural",
+                question: "________ five cookies in the box.",
+                options: [
+                    { text: "There were", isCorrect: true },
+                    { text: "There was", isCorrect: false },
+                    { text: "There wasn't", isCorrect: false },
+                    { text: "Was there", isCorrect: false }
+                ],
+                simpleExplanation: "'Five cookies' is plural (more than 1). So we use THERE WERE."
+            },
+            {
+                visual: "🥛 ❄️",
+                hint: "💧 'some milk' = Uncountable (Always Singular!)",
+                question: "________ some cold milk in the fridge.",
+                options: [
+                    { text: "There was", isCorrect: true },
+                    { text: "There were", isCorrect: false },
+                    { text: "There weren't", isCorrect: false },
+                    { text: "Were there", isCorrect: false }
+                ],
+                simpleExplanation: "'Milk' is uncountable (no -s). With uncountable nouns, we always use THERE WAS!"
+            },
+            {
+                visual: "📱 ❌ 🦖",
+                hint: "2️⃣ 'any phones' (-s) = Plural Negative (-)",
+                question: "In dinosaur times, ________ any telephones!",
+                options: [
+                    { text: "there weren't", isCorrect: true },
+                    { text: "there wasn't", isCorrect: false },
+                    { text: "there was", isCorrect: false },
+                    { text: "was there", isCorrect: false }
+                ],
+                simpleExplanation: "'Telephones' has '-s' (plural). In negative (-), we use THERE WEREN'T."
+            },
+            {
+                visual: "🚗 ❌ 🦖",
+                hint: "1️⃣ 'a car' = Singular Negative (-)",
+                question: "In dinosaur times, ________ a car on the street.",
+                options: [
+                    { text: "there wasn't", isCorrect: true },
+                    { text: "there weren't", isCorrect: false },
+                    { text: "there were", isCorrect: false },
+                    { text: "were there", isCorrect: false }
+                ],
+                simpleExplanation: "'A car' is only 1 thing. In negative (-), we use THERE WASN'T."
+            },
+            {
+                visual: "🦴 ❓",
+                hint: "1️⃣ Question (?) with 'a skeleton' (Only 1)",
+                question: "________ a dinosaur skeleton in the museum?",
+                options: [
+                    { text: "Was there", isCorrect: true },
+                    { text: "Were there", isCorrect: false },
+                    { text: "There were", isCorrect: false },
+                    { text: "Weren't there", isCorrect: false }
+                ],
+                simpleExplanation: "For a question (?) with 1 thing ('a skeleton'), we ask: 'WAS THERE...?'"
+            },
+            {
+                visual: "🥚 🥚 ❓",
+                hint: "2️⃣ Question (?) with 'any eggs' (-s)",
+                question: "________ any dinosaur eggs in the nest?",
+                options: [
+                    { text: "Were there", isCorrect: true },
+                    { text: "Was there", isCorrect: false },
+                    { text: "There was", isCorrect: false },
+                    { text: "Wasn't there", isCorrect: false }
+                ],
+                simpleExplanation: "For a question (?) with plural things ('eggs'), we ask: 'WERE THERE...?'"
+            },
+            {
+                visual: "1️⃣ 👦 + 2️⃣ 🐶🐶",
+                hint: "1 boy (Singular) vs. 2 dogs (Plural -s)",
+                question: "________ one boy and ________ two dogs in the garden.",
+                options: [
+                    { text: "There was / there were", isCorrect: true },
+                    { text: "There were / there was", isCorrect: false },
+                    { text: "There was / there was", isCorrect: false },
+                    { text: "There were / there were", isCorrect: false }
+                ],
+                simpleExplanation: "One boy (1) ➡️ THERE WAS. Two dogs (2+) ➡️ THERE WERE."
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+        let hearts = 3;
+        let correctCount = 0;
+
+        function startGame() {
+            currentQIndex = 0;
+            score = 0;
+            hearts = 3;
+            correctCount = 0;
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('flex');
+
+            const quizScreen = document.getElementById('quiz-screen');
+            quizScreen.classList.remove('hidden');
+            quizScreen.classList.add('flex');
+
+            updateHUD();
+            loadQuestion();
+        }
+
+        function updateHUD() {
+            const heartsContainer = document.getElementById('hearts-container');
+            heartsContainer.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                const s = document.createElement('span');
+                s.textContent = i < hearts ? '❤️' : '🖤';
+                heartsContainer.appendChild(s);
+            }
+            document.getElementById('q-current').textContent = currentQIndex + 1;
+            document.getElementById('score-display').textContent = score;
+            document.getElementById('progress-bar').style.width = `${((currentQIndex + 1) / questions.length) * 100}%`;
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQIndex];
+            document.getElementById('q-visual').textContent = q.visual;
+            document.getElementById('q-hint').textContent = q.hint;
+            document.getElementById('q-text').textContent = q.question;
+            document.getElementById('feedback-box').classList.add('hidden');
+
+            const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+
+            shuffled.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn bg-white hover:bg-teal-50 text-gray-800 font-bold text-xl py-4 px-4 rounded-2xl border-2 border-slate-300 text-left flex items-center justify-between cursor-pointer';
+                btn.innerHTML = `<span>${opt.text}</span>`;
+                btn.onclick = () => selectAnswer(btn, opt, shuffled);
+                grid.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedBtn, selectedOpt, allOptions) {
+            const q = questions[currentQIndex];
+            const buttons = document.getElementById('options-grid').children;
+
+            for (let btn of buttons) {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-teal-50', 'cursor-pointer');
+            }
+
+            const correctOption = allOptions.find(o => o.isCorrect);
+
+            for (let i = 0; i < buttons.length; i++) {
+                if (allOptions[i].isCorrect) {
+                    buttons[i].classList.add('btn-correct');
+                    buttons[i].innerHTML += ` <span>✅</span>`;
+                }
+            }
+
+            const fbBox = document.getElementById('feedback-box');
+            const fbTitle = document.getElementById('fb-title');
+            const fbCorrectAns = document.getElementById('fb-correct-ans');
+            const fbExplanation = document.getElementById('fb-explanation');
+
+            if (selectedOpt.isCorrect) {
+                playSound('correct');
+                correctCount++;
+                score += 100;
+
+                fbBox.className = 'w-full mt-5 p-4 rounded-2xl border-4 bg-green-50 border-green-400 text-green-900 bounce-in block';
+                fbTitle.textContent = '🎉 Awesome! +100 Points!';
+                fbTitle.className = 'text-lg font-bold text-green-700 mb-1';
+                fbCorrectAns.classList.add('hidden');
+                fbExplanation.textContent = `💡 ${q.simpleExplanation}`;
+            } else {
+                playSound('wrong');
+                selectedBtn.classList.add('btn-wrong', 'shake');
+                selectedBtn.innerHTML += ` <span>❌</span>`;
+                if (hearts > 0) hearts--;
+
+                fbBox.className = 'w-full mt-5 p-4 rounded-2xl border-4 bg-red-50 border-red-400 text-red-950 bounce-in block';
+                fbTitle.textContent = '💡 Look at the Rule!';
+                fbTitle.className = 'text-lg font-bold text-red-700 mb-1';
+
+                fbCorrectAns.classList.remove('hidden');
+                fbCorrectAns.className = 'text-sm font-bold mb-2 bg-green-200 text-green-900 inline-block px-3 py-1 rounded-lg';
+                fbCorrectAns.innerHTML = `✅ Correct Answer: ${correctOption.text}`;
+
+                fbExplanation.textContent = `Rule: ${q.simpleExplanation}`;
+            }
+
+            updateHUD();
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < questions.length) {
+                updateHUD();
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-screen').classList.add('hidden');
+                document.getElementById('quiz-screen').classList.remove('flex');
+                const endScreen = document.getElementById('end-screen');
+                endScreen.classList.remove('hidden');
+                endScreen.classList.add('flex');
+                document.getElementById('final-score').textContent = score;
+                document.getElementById('final-correct').textContent = `${correctCount}/${questions.length}`;
+            }
+        }
+    </script>
+</body>
+</html>

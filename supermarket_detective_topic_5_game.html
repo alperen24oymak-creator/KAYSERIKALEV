@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supermarket Detective: Countable & Uncountable Nouns - Topic 5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #dbeafe 0%, #fef3c7 50%, #dcfce7 100%);
+            min-height: 100vh;
+            user-select: none;
+        }
+        .bounce-in {
+            animation: bounceIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.75); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-3px, 0, 0); }
+            20%, 80% { transform: translate3d(5px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+            40%, 60% { transform: translate3d(8px, 0, 0); }
+        }
+        .option-btn {
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 0 #cbd5e1;
+        }
+        .option-btn:active:not(:disabled) {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #cbd5e1;
+        }
+        .btn-correct {
+            background-color: #22c55e !important;
+            border-color: #15803d !important;
+            color: white !important;
+            box-shadow: 0 5px 0 #166534 !important;
+        }
+        .btn-wrong {
+            background-color: #ef4444 !important;
+            border-color: #b91c1c !important;
+            color: white !important;
+            box-shadow: 0 5px 0 #991b1b !important;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-3 md:p-6">
+
+    <!-- Main Container -->
+    <div id="game-app" class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl border-4 border-blue-600 overflow-hidden">
+
+        <!-- ================= START SCREEN (WITH FULL REMINDER TABLE) ================= -->
+        <div id="start-screen" class="p-5 md:p-8 flex flex-col items-center space-y-5">
+            <div class="text-5xl md:text-6xl">🛒 🕵️‍♂️ 🍎 🥛</div>
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-700 text-center">Supermarket Grammar Detective!</h1>
+            <p class="text-gray-600 font-medium text-center max-w-2xl text-base md:text-lg">
+                Welcome to <strong>Topic 5</strong>! Read the <strong>Super Reminder Table</strong> below first, then complete <strong>16 Supermarket Missions</strong>!
+            </p>
+
+            <!-- COMPREHENSIVE A1 REMINDER TABLE (START SCREEN) -->
+            <div class="w-full space-y-4">
+                
+                <!-- Part 1: Countable vs Uncountable Definition Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <!-- Countable Card -->
+                    <div class="bg-blue-50 border-2 border-blue-300 rounded-2xl p-4">
+                        <h3 class="text-lg font-bold text-blue-800 flex items-center gap-2 mb-1">
+                            <span>🔢</span> 1. COUNTABLE NOUNS (We CAN count: 1, 2, 3...)
+                        </h3>
+                        <p class="text-sm text-gray-700 mb-2">They have a <strong>Singular (1)</strong> and a <strong>Plural (2+ with -s)</strong> form!</p>
+                        <div class="bg-white p-2.5 rounded-xl border border-blue-200 text-xs md:text-sm space-y-1 font-medium">
+                            <div>🍎 <strong>Singular (1):</strong> <u>an</u> apple, <u>a</u> banana, <u>a</u> carrot, <u>an</u> egg, <u>a</u> cookie</div>
+                            <div>🍎🍎 <strong>Plural (2+):</strong> two apple<u>s</u>, three banana<u>s</u>, carrot<u>s</u>, egg<u>s</u></div>
+                        </div>
+                    </div>
+
+                    <!-- Uncountable Card -->
+                    <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4">
+                        <h3 class="text-lg font-bold text-amber-900 flex items-center gap-2 mb-1">
+                            <span>💧</span> 2. UNCOUNTABLE NOUNS (We CANNOT count: 1, 2, 3)
+                        </h3>
+                        <p class="text-sm text-gray-700 mb-2">Liquids, powders, & soft foods. <strong>ALWAYS Singular! NO "-s"! NO "a/an"!</strong></p>
+                        <div class="bg-white p-2.5 rounded-xl border border-amber-200 text-xs md:text-sm space-y-1 font-medium">
+                            <div>🥛 <strong>Examples:</strong> water, milk, juice, sugar, salt, flour, rice, cheese, bread, meat, butter, honey</div>
+                            <div class="text-red-600 font-bold">❌ Never say: "a milk", "two waters", "three breads"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 2: Quantifiers & Grammar Master Table -->
+                <div class="overflow-x-auto rounded-2xl border-2 border-slate-300 shadow-sm">
+                    <table class="w-full text-left border-collapse text-xs md:text-sm">
+                        <thead>
+                            <tr class="bg-blue-600 text-white">
+                                <th class="p-2.5 md:p-3 border-r border-blue-500">Grammar Word</th>
+                                <th class="p-2.5 md:p-3 border-r border-blue-500">Countable OR Uncountable?</th>
+                                <th class="p-2.5 md:p-3 border-r border-blue-500">Simple Rule</th>
+                                <th class="p-2.5 md:p-3">Easy Example</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 font-medium">
+                            <tr class="bg-blue-50/60">
+                                <td class="p-2.5 font-bold text-blue-800">There is</td>
+                                <td class="p-2.5">Singular (1) & Uncountable</td>
+                                <td class="p-2.5">For <strong>1 thing</strong> OR <strong>uncountable</strong></td>
+                                <td class="p-2.5"><strong>There is</strong> a banana. / <strong>There is</strong> some milk.</td>
+                            </tr>
+                            <tr class="bg-white">
+                                <td class="p-2.5 font-bold text-blue-800">There are</td>
+                                <td class="p-2.5">Plural Countable (2+)</td>
+                                <td class="p-2.5">ONLY for <strong>2 or more</strong> things (-s)</td>
+                                <td class="p-2.5"><strong>There are</strong> three apples.</td>
+                            </tr>
+                            <tr class="bg-green-50/70">
+                                <td class="p-2.5 font-bold text-green-800">afew (birkaç)</td>
+                                <td class="p-2.5">🔢 Plural Countable (-s)</td>
+                                <td class="p-2.5">Small number (We CAN count)</td>
+                                <td class="p-2.5">I have <strong>a few</strong> cookies. 🍪🍪</td>
+                            </tr>
+                            <tr class="bg-amber-50/70">
+                                <td class="p-2.5 font-bold text-amber-800">a little (biraz)</td>
+                                <td class="p-2.5">💧 Uncountable</td>
+                                <td class="p-2.5">Small amount (CANNOT count)</td>
+                                <td class="p-2.5">There is <strong>a little</strong> water / sugar. 💧</td>
+                            </tr>
+                            <tr class="bg-purple-50/60">
+                                <td class="p-2.5 font-bold text-purple-800">some (biraz / birkaç)</td>
+                                <td class="p-2.5">✅ BOTH (Plural & Uncount.)</td>
+                                <td class="p-2.5">Used in <strong>Positive (+)</strong> sentences</td>
+                                <td class="p-2.5">There are <strong>some</strong> eggs. / There is <strong>some</strong> cheese.</td>
+                            </tr>
+                            <tr class="bg-red-50/60">
+                                <td class="p-2.5 font-bold text-red-700">any (hiç)</td>
+                                <td class="p-2.5">✅ BOTH (Plural & Uncount.)</td>
+                                <td class="p-2.5">Used in <strong>Negative (-)</strong> & <strong>Questions (?)</strong></td>
+                                <td class="p-2.5">There isn't <strong>any</strong> milk. / Are there <strong>any</strong> apples?</td>
+                            </tr>
+                            <tr class="bg-white">
+                                <td class="p-2.5 font-bold text-indigo-700">a lot of (çok)</td>
+                                <td class="p-2.5">✅ BOTH (Plural & Uncount.)</td>
+                                <td class="p-2.5">Big amount or big number!</td>
+                                <td class="p-2.5">There are <strong>a lot of</strong> chips / <strong>a lot of</strong> water.</td>
+                            </tr>
+                            <tr class="bg-blue-50/60">
+                                <td class="p-2.5 font-bold text-blue-900">How many / many</td>
+                                <td class="p-2.5">🔢 Plural Countable (-s)</td>
+                                <td class="p-2.5">Ask/talk about number (with -s)</td>
+                                <td class="p-2.5"><strong>How many</strong> oranges are there? Not <strong>many</strong>!</td>
+                            </tr>
+                            <tr class="bg-amber-50/70">
+                                <td class="p-2.5 font-bold text-amber-900">How much / much</td>
+                                <td class="p-2.5">💧 Uncountable</td>
+                                <td class="p-2.5">Ask/talk about amount (no -s)</td>
+                                <td class="p-2.5"><strong>How much</strong> milk is there? Not <strong>much</strong>!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full max-w-md bg-blue-600 hover:bg-blue-700 text-white text-2xl font-bold py-4 px-8 rounded-2xl shadow-[0_6px_0_#1e3a8a] active:translate-y-1 transition-all cursor-pointer">
+                🛒 START 16 MISSIONS!
+            </button>
+        </div>
+
+        <!-- ================= QUIZ SCREEN ================= -->
+        <div id="quiz-screen" class="hidden flex-col">
+            <!-- Top Bar -->
+            <div class="bg-blue-600 text-white p-4 flex flex-wrap justify-between items-center gap-2">
+                <div id="hearts-container" class="flex space-x-1 text-2xl">
+                    <span>❤️</span><span>❤️</span><span>❤️</span>
+                </div>
+                <div class="bg-blue-800 px-4 py-1 rounded-full font-bold text-sm md:text-base">
+                    Mission <span id="q-current">1</span> / 16
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="toggleModal(true)" class="bg-white text-blue-800 hover:bg-blue-50 px-3 py-1 rounded-xl font-bold text-xs md:text-sm shadow cursor-pointer">
+                        📖 Grammar Table
+                    </button>
+                    <div class="bg-yellow-400 text-blue-950 px-3 py-1 rounded-xl font-bold text-lg">
+                        ⭐ <span id="score-display">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-blue-100 h-2.5">
+                <div id="progress-bar" class="bg-green-400 h-2.5 transition-all duration-300" style="width: 6%;"></div>
+            </div>
+
+            <!-- Question Area -->
+            <div class="p-5 md:p-8 flex flex-col items-center max-w-2xl mx-auto w-full">
+                <!-- Category Tag & Visual -->
+                <div class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 mb-4 flex flex-col items-center">
+                    <span id="q-category" class="bg-blue-100 text-blue-800 font-bold px-3 py-0.5 rounded-full text-xs md:text-sm mb-2 border border-blue-300">
+                        Countable vs Uncountable
+                    </span>
+                    <div id="q-visual" class="text-5xl md:text-6xl my-1">🍎 🥛</div>
+                    <span id="q-hint" class="text-xs md:text-sm font-bold text-gray-500 mt-1">Hint</span>
+                </div>
+
+                <!-- Question Text -->
+                <h2 id="q-text" class="text-xl md:text-2xl font-bold text-gray-800 text-center mb-5 leading-snug">
+                    Loading...
+                </h2>
+
+                <!-- 4 Options -->
+                <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full"></div>
+
+                <!-- Immediate Simple Feedback Box -->
+                <div id="feedback-box" class="hidden w-full mt-5 p-4 rounded-2xl border-4 bounce-in">
+                    <h3 id="fb-title" class="text-lg font-bold mb-1">Correct!</h3>
+                    <p id="fb-correct-ans" class="text-sm font-bold mb-2 hidden"></p>
+                    <p id="fb-explanation" class="text-base font-medium leading-snug"></p>
+                    <button onclick="nextQuestion()" class="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-[0_4px_0_#1e3a8a] cursor-pointer text-lg">
+                        Next Mission ➡️
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= END SCREEN (WITH FULL REMINDER TABLE) ================= -->
+        <div id="end-screen" class="hidden p-5 md:p-8 flex-col items-center space-y-5">
+            <div class="text-7xl bounce-in">🏆🕵️‍♂️</div>
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-700 text-center">Supermarket Detective Graduated!</h1>
+
+            <!-- Score Box -->
+            <div class="bg-blue-50 p-4 rounded-2xl border-2 border-blue-200 w-full max-w-md flex justify-around text-center">
+                <div>
+                    <div class="text-xs font-bold text-gray-500">FINAL SCORE</div>
+                    <div id="final-score" class="text-3xl font-bold text-blue-700">0</div>
+                </div>
+                <div class="border-l-2 border-blue-200"></div>
+                <div>
+                    <div class="text-xs font-bold text-gray-500">CORRECT</div>
+                    <div id="final-correct" class="text-3xl font-bold text-green-600">0/16</div>
+                </div>
+            </div>
+
+            <!-- FINAL REVIEW REMINDER TABLE (END SCREEN) -->
+            <div class="w-full space-y-3">
+                <h2 class="text-xl font-bold text-center text-blue-900">📌 Final Grammar Reminder Table (Save or Review!)</h2>
+                <div class="overflow-x-auto rounded-2xl border-2 border-slate-300 shadow-sm">
+                    <table class="w-full text-left border-collapse text-xs md:text-sm">
+                        <thead>
+                            <tr class="bg-emerald-600 text-white">
+                                <th class="p-2.5 border-r border-emerald-500">Rule / Quantifier</th>
+                                <th class="p-2.5 border-r border-emerald-500">Used With</th>
+                                <th class="p-2.5 border-r border-emerald-500">When to Use</th>
+                                <th class="p-2.5">Key Examples</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 font-medium">
+                            <tr class="bg-blue-50/50">
+                                <td class="p-2 font-bold text-blue-800">Countable Nouns</td>
+                                <td class="p-2">1, 2, 3... (Singular & Plural -s)</td>
+                                <td class="p-2">Things we can count one by one</td>
+                                <td class="p-2">a banana ➡️ two banana<strong>s</strong>, an egg ➡️ three egg<strong>s</strong></td>
+                            </tr>
+                            <tr class="bg-amber-50/50">
+                                <td class="p-2 font-bold text-amber-800">Uncountable Nouns</td>
+                                <td class="p-2">ALWAYS Singular (NO -s, NO a/an)</td>
+                                <td class="p-2">Liquids, powders, bread, cheese, meat</td>
+                                <td class="p-2">milk, water, sugar, salt, flour, rice, bread, cheese</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-bold text-indigo-700">There is / There are</td>
+                                <td class="p-2"><strong>is</strong> = 1 or Uncount. | <strong>are</strong> = Plural (-s)</td>
+                                <td class="p-2">To say what exists</td>
+                                <td class="p-2"><strong>There is</strong> some milk. / <strong>There are</strong> five apples.</td>
+                            </tr>
+                            <tr class="bg-green-50/50">
+                                <td class="p-2 font-bold text-green-800">a few vs. a little</td>
+                                <td class="p-2"><strong>a few</strong> = Plural (-s) | <strong>a little</strong> = Uncount.</td>
+                                <td class="p-2">Small number vs. Small amount</td>
+                                <td class="p-2"><strong>a few</strong> carrots 🥕🥕 / <strong>a little</strong> sugar 🧂</td>
+                            </tr>
+                            <tr class="bg-purple-50/50">
+                                <td class="p-2 font-bold text-purple-800">some vs. any</td>
+                                <td class="p-2">Both Plural (-s) & Uncountable</td>
+                                <td class="p-2"><strong>some</strong> = (+) | <strong>any</strong> = (-) and (?)</td>
+                                <td class="p-2">I have <strong>some</strong> bread. / I don't have <strong>any</strong> bread.</td>
+                            </tr>
+                            <tr class="bg-orange-50/50">
+                                <td class="p-2 font-bold text-orange-800">How many vs. How much</td>
+                                <td class="p-2"><strong>many</strong> = Plural (-s) | <strong>much</strong> = Uncount.</td>
+                                <td class="p-2">Questions & Negative sentences</td>
+                                <td class="p-2"><strong>How many</strong> cookies? / <strong>How much</strong> water?</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-bold text-emerald-800">a lot of</td>
+                                <td class="p-2">Both Plural (-s) & Uncountable</td>
+                                <td class="p-2">Big number or big amount!</td>
+                                <td class="p-2"><strong>a lot of</strong> bananas / <strong>a lot of</strong> juice</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full max-w-md bg-blue-600 hover:bg-blue-700 text-white text-xl font-bold py-4 rounded-2xl shadow-[0_6px_0_#1e3a8a] cursor-pointer">
+                🔄 Play Again!
+            </button>
+        </div>
+
+    </div>
+
+    <!-- POPUP MODAL FOR GRAMMAR TABLE DURING QUIZ -->
+    <div id="table-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-5 border-4 border-blue-500 shadow-2xl space-y-3 bounce-in">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="text-xl font-bold text-blue-700">📖 Quick Grammar Cheat Sheet</h3>
+                <button onclick="toggleModal(false)" class="bg-red-500 text-white font-bold px-3 py-1 rounded-xl cursor-pointer">✖ Close</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs md:text-sm">
+                <div class="bg-blue-50 p-2.5 rounded-xl border border-blue-200">
+                    <p class="font-bold text-blue-800">🔢 COUNTABLE (1, 2, 3 + s)</p>
+                    <p>• Singular: <strong>There is a/an</strong> apple.</p>
+                    <p>• Plural: <strong>There are</strong> apple<strong>s</strong>.</p>
+                    <p>• Small number: <strong>a few</strong> apples</p>
+                    <p>• Question: <strong>How many</strong> apples?</p>
+                </div>
+                <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200">
+                    <p class="font-bold text-amber-900">💧 UNCOUNTABLE (NO -s, NO a/an)</p>
+                    <p>• Always Singular: <strong>There is</strong> milk.</p>
+                    <p>• Small amount: <strong>a little</strong> milk</p>
+                    <p>• Question: <strong>How much</strong> milk?</p>
+                    <p>• Examples: water, sugar, bread, cheese, rice, meat</p>
+                </div>
+                <div class="bg-purple-50 p-2.5 rounded-xl border border-purple-200 sm:col-span-2">
+                    <p class="font-bold text-purple-900">✨ BOTH COUNTABLE & UNCOUNTABLE:</p>
+                    <p>• <strong>some:</strong> Positive (+) sentences ➡️ "There is <strong>some</strong> water / <strong>some</strong> cookies."</p>
+                    <p>• <strong>any:</strong> Negative (-) & Questions (?) ➡️ "There isn't <strong>any</strong> water. Are there <strong>any</strong> cookies?"</p>
+                    <p>• <strong>a lot of:</strong> Big amount/number ➡️ "<strong>a lot of</strong> apples / <strong>a lot of</strong> milk"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+        function playSound(type) {
+            try {
+                if (!audioCtx) audioCtx = new AudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(784, audioCtx.currentTime + 0.12);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } else {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(240, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(170, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                }
+            } catch (e) {}
+        }
+
+        function toggleModal(show) {
+            const modal = document.getElementById('table-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        // 16 Precise Questions covering EVERY aspect requested in Topic 5
+        const questions = [
+            {
+                category: "1. Countable Nouns",
+                visual: "🍎 🍎 🍎",
+                hint: "Can we count 1 apple, 2 apples, 3 apples?",
+                question: "Which food is a COUNTABLE noun (we can count 1, 2, 3)?",
+                options: [
+                    { text: "🍎 Apple (apples)", isCorrect: true },
+                    { text: "🥛 Milk", isCorrect: false },
+                    { text: "💧 Water", isCorrect: false },
+                    { text: "🍚 Rice", isCorrect: false }
+                ],
+                simpleExplanation: "We can count apples (1 apple, 2 apples, 3 apples). Milk, water, and rice are uncountable!"
+            },
+            {
+                category: "2. Uncountable Nouns",
+                visual: "🥛 🧀 🍞 🧂",
+                hint: "Liquids, powders, bread, and cheese",
+                question: "Look at the list: Banana, Egg, Sugar, Carrot. Which one is UNCOUNTABLE?",
+                options: [
+                    { text: "🧂 Sugar", isCorrect: true },
+                    { text: "🍌 Banana", isCorrect: false },
+                    { text: "🥚 Egg", isCorrect: false },
+                    { text: "🥕 Carrot", isCorrect: false }
+                ],
+                simpleExplanation: "Sugar is a powder with tiny pieces, so we CANNOT count it one by one. Sugar is UNCOUNTABLE!"
+            },
+            {
+                category: "3. Singular vs. Plural Rule",
+                visual: "🥛 ❌ s",
+                hint: "Uncountable nouns NEVER take -s or a/an!",
+                question: "Which sentence is CORRECT?",
+                options: [
+                    { text: "✅ I drink some milk.", isCorrect: true },
+                    { text: "❌ I drink three milks.", isCorrect: false },
+                    { text: "❌ I drink a milk.", isCorrect: false },
+                    { text: "❌ There are milks.", isCorrect: false }
+                ],
+                simpleExplanation: "'Milk' is uncountable! Uncountable nouns NEVER take '-s' (milks ❌) and NEVER take 'a/an' (a milk ❌)."
+            },
+            {
+                category: "4. Singular Countable (a / an)",
+                visual: "1️⃣ 🥚",
+                hint: "1 single egg (starts with vowel 'e')",
+                question: "There is ________ egg and ________ banana on the table.",
+                options: [
+                    { text: "an / a", isCorrect: true },
+                    { text: "some / any", isCorrect: false },
+                    { text: "many / much", isCorrect: false },
+                    { text: "a / an", isCorrect: false }
+                ],
+                simpleExplanation: "For 1 countable thing, we use 'a' or 'an'. We say 'AN egg' (starts with e) and 'A banana' (starts with b)."
+            },
+            {
+                category: "5. There is vs. There are (Plural)",
+                visual: "🍪 🍪 🍪 🍪",
+                hint: "4 cookies = Plural Countable (-s)",
+                question: "________ four cookies on the plate.",
+                options: [
+                    { text: "There are", isCorrect: true },
+                    { text: "There is", isCorrect: false },
+                    { text: "How much", isCorrect: false },
+                    { text: "A little", isCorrect: false }
+                ],
+                simpleExplanation: "'Cookies' is plural (more than 1, ends with -s). With plural nouns, we ALWAYS use 'There are'!"
+            },
+            {
+                category: "6. There is vs. There are (Uncountable)",
+                visual: "🧀 🍯",
+                hint: "Cheese & honey = Uncountable (Always Singular!)",
+                question: "________ some cheese and honey in the fridge.",
+                options: [
+                    { text: "There is", isCorrect: true },
+                    { text: "There are", isCorrect: false },
+                    { text: "How many", isCorrect: false },
+                    { text: "A few", isCorrect: false }
+                ],
+                simpleExplanation: "Cheese and honey are UNCOUNTABLE. Uncountable nouns always use 'There is' (singular)!"
+            },
+            {
+                category: "7. Quantifiers: A FEW",
+                visual: "🥕 🥕 🥕",
+                hint: "Small number + Plural (-s)",
+                question: "I have ________ carrots in my basket (only 3 carrots).",
+                options: [
+                    { text: "a few", isCorrect: true },
+                    { text: "a little", isCorrect: false },
+                    { text: "any", isCorrect: false },
+                    { text: "much", isCorrect: false }
+                ],
+                simpleExplanation: "We use 'A FEW' (birkaç) with plural COUNTABLE nouns like 'carrots'!"
+            },
+            {
+                category: "8. Quantifiers: A LITTLE",
+                visual: "💧 🥛",
+                hint: "Small amount + Uncountable (no -s)",
+                question: "There is only ________ water in my bottle.",
+                options: [
+                    { text: "a little", isCorrect: true },
+                    { text: "a few", isCorrect: false },
+                    { text: "many", isCorrect: false },
+                    { text: "a", isCorrect: false }
+                ],
+                simpleExplanation: "We use 'A LITTLE' (biraz) with UNCOUNTABLE nouns like water, milk, sugar, or cheese!"
+            },
+            {
+                category: "9. A few vs. A little Check!",
+                visual: "🍓🍓 vs 🧂",
+                hint: "Strawberries (-s) vs. Salt (uncountable)",
+                question: "Complete the sentence: 'Put ________ strawberries and ________ salt in the bowl.'",
+                options: [
+                    { text: "a few / a little", isCorrect: true },
+                    { text: "a little / a few", isCorrect: false },
+                    { text: "much / many", isCorrect: false },
+                    { text: "a / an", isCorrect: false }
+                ],
+                simpleExplanation: "Strawberries are countable (-s) ➡️ 'a few strawberries'. Salt is uncountable ➡️ 'a little salt'."
+            },
+            {
+                category: "10. SOME (Positive Sentences +)",
+                visual: "🍞 🧀 ✅",
+                hint: "Positive sentence (+) with uncountable noun",
+                question: "Positive (+): 'There is ________ fresh bread in the kitchen.'",
+                options: [
+                    { text: "some", isCorrect: true },
+                    { text: "any", isCorrect: false },
+                    { text: "a few", isCorrect: false },
+                    { text: "many", isCorrect: false }
+                ],
+                simpleExplanation: "In POSITIVE (+) sentences, we use 'SOME'! ('Bread' is uncountable in English, so we say 'some bread')."
+            },
+            {
+                category: "11. ANY (Negative Sentences -)",
+                visual: "🥛 ❌",
+                hint: "Negative sentence (isn't = is not)",
+                question: "Negative (-): 'There isn't ________ milk in the glass.'",
+                options: [
+                    { text: "any", isCorrect: true },
+                    { text: "some", isCorrect: false },
+                    { text: "a few", isCorrect: false },
+                    { text: "many", isCorrect: false }
+                ],
+                simpleExplanation: "In NEGATIVE (-) sentences (with isn't / aren't / don't), we always use 'ANY'!"
+            },
+            {
+                category: "12. ANY (Questions ?)",
+                visual: "🥚 ❓",
+                hint: "Question (?) with plural noun",
+                question: "Question (?): 'Are there ________ eggs in the fridge?'",
+                options: [
+                    { text: "any", isCorrect: true },
+                    { text: "some", isCorrect: false },
+                    { text: "a little", isCorrect: false },
+                    { text: "much", isCorrect: false }
+                ],
+                simpleExplanation: "In QUESTIONS (?), we use 'ANY'! ('Are there any eggs?' / 'Is there any water?')."
+            },
+            {
+                category: "13. A LOT OF (Big Amount / Number)",
+                visual: "🍟 🍟 🍟 🍟 🍟",
+                hint: "Works with BOTH Countable & Uncountable!",
+                question: "Look at the big party table! There are ________ potato chips and there is ________ juice!",
+                options: [
+                    { text: "a lot of / a lot of", isCorrect: true },
+                    { text: "a little / a few", isCorrect: false },
+                    { text: "much / many", isCorrect: false },
+                    { text: "any / any", isCorrect: false }
+                ],
+                simpleExplanation: "'A LOT OF' (çok) is a super friend! You can use 'a lot of' with BOTH countable (chips) and uncountable (juice) nouns!"
+            },
+            {
+                category: "14. Questions: HOW MANY",
+                visual: "🍊 🍊 🍊 ❓",
+                hint: "Oranges has '-s' (Countable Plural)!",
+                question: "________ oranges are there in the bag?",
+                options: [
+                    { text: "How many", isCorrect: true },
+                    { text: "How much", isCorrect: false },
+                    { text: "There is", isCorrect: false },
+                    { text: "A little", isCorrect: false }
+                ],
+                simpleExplanation: "'Oranges' is a plural COUNTABLE noun (ends in -s). So we ask 'HOW MANY oranges?'"
+            },
+            {
+                category: "15. Questions: HOW MUCH",
+                visual: "🍚 🌾 ❓",
+                hint: "Flour & rice have NO '-s' (Uncountable)!",
+                question: "________ flour do we need for the cake?",
+                options: [
+                    { text: "How much", isCorrect: true },
+                    { text: "How many", isCorrect: false },
+                    { text: "There are", isCorrect: false },
+                    { text: "A few", isCorrect: false }
+                ],
+                simpleExplanation: "'Flour' is an UNCOUNTABLE noun (no -s). To ask about the amount of an uncountable noun, we ask 'HOW MUCH?'"
+            },
+            {
+                category: "16. MUCH vs. MANY in Negatives",
+                visual: "🍎 ❌ vs 💧 ❌",
+                hint: "many = apples (-s) | much = water",
+                question: "Complete the rule: 'There aren't ________ apples, and there isn't ________ water.'",
+                options: [
+                    { text: "many / much", isCorrect: true },
+                    { text: "much / many", isCorrect: false },
+                    { text: "a little / a few", isCorrect: false },
+                    { text: "some / some", isCorrect: false }
+                ],
+                simpleExplanation: "We use 'MANY' with plural countable nouns (aren't many apples) and 'MUCH' with uncountable nouns (isn't much water)!"
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+        let hearts = 3;
+        let correctCount = 0;
+
+        function startGame() {
+            currentQIndex = 0;
+            score = 0;
+            hearts = 3;
+            correctCount = 0;
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('flex');
+
+            const quizScreen = document.getElementById('quiz-screen');
+            quizScreen.classList.remove('hidden');
+            quizScreen.classList.add('flex');
+
+            updateHUD();
+            loadQuestion();
+        }
+
+        function updateHUD() {
+            const heartsContainer = document.getElementById('hearts-container');
+            heartsContainer.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                const s = document.createElement('span');
+                s.textContent = i < hearts ? '❤️' : '🖤';
+                heartsContainer.appendChild(s);
+            }
+            document.getElementById('q-current').textContent = currentQIndex + 1;
+            document.getElementById('score-display').textContent = score;
+            document.getElementById('progress-bar').style.width = `${((currentQIndex + 1) / questions.length) * 100}%`;
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQIndex];
+            document.getElementById('q-category').textContent = q.category;
+            document.getElementById('q-visual').textContent = q.visual;
+            document.getElementById('q-hint').textContent = `💡 Hint: ${q.hint}`;
+            document.getElementById('q-text').textContent = q.question;
+            document.getElementById('feedback-box').classList.add('hidden');
+
+            const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+
+            shuffled.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn bg-white hover:bg-blue-50 text-gray-800 font-bold text-lg py-4 px-4 rounded-2xl border-2 border-slate-300 text-left flex items-center justify-between cursor-pointer';
+                btn.innerHTML = `<span>${opt.text}</span>`;
+                btn.onclick = () => selectAnswer(btn, opt, shuffled);
+                grid.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedBtn, selectedOpt, allOptions) {
+            const q = questions[currentQIndex];
+            const buttons = document.getElementById('options-grid').children;
+
+            for (let btn of buttons) {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-blue-50', 'cursor-pointer');
+            }
+
+            const correctOption = allOptions.find(o => o.isCorrect);
+
+            for (let i = 0; i < buttons.length; i++) {
+                if (allOptions[i].isCorrect) {
+                    buttons[i].classList.add('btn-correct');
+                    buttons[i].innerHTML += ` <span>✅</span>`;
+                }
+            }
+
+            const fbBox = document.getElementById('feedback-box');
+            const fbTitle = document.getElementById('fb-title');
+            const fbCorrectAns = document.getElementById('fb-correct-ans');
+            const fbExplanation = document.getElementById('fb-explanation');
+
+            if (selectedOpt.isCorrect) {
+                playSound('correct');
+                correctCount++;
+                score += 100;
+
+                fbBox.className = 'w-full mt-5 p-4 rounded-2xl border-4 bg-green-50 border-green-400 text-green-900 bounce-in block';
+                fbTitle.textContent = '🎉 Detective Spot On! +100 Points!';
+                fbTitle.className = 'text-lg font-bold text-green-700 mb-1';
+                fbCorrectAns.classList.add('hidden');
+                fbExplanation.textContent = `💡 Rule: ${q.simpleExplanation}`;
+            } else {
+                playSound('wrong');
+                selectedBtn.classList.add('btn-wrong', 'shake');
+                selectedBtn.innerHTML += ` <span>❌</span>`;
+                if (hearts > 0) hearts--;
+
+                fbBox.className = 'w-full mt-5 p-4 rounded-2xl border-4 bg-red-50 border-red-400 text-red-950 bounce-in block';
+                fbTitle.textContent = '💡 Let\'s Check the Grammar Rule!';
+                fbTitle.className = 'text-lg font-bold text-red-700 mb-1';
+
+                fbCorrectAns.classList.remove('hidden');
+                fbCorrectAns.className = 'text-sm font-bold mb-2 bg-green-200 text-green-900 inline-block px-3 py-1 rounded-lg';
+                fbCorrectAns.innerHTML = `✅ Correct Answer: ${correctOption.text}`;
+
+                fbExplanation.textContent = `Simple Rule: ${q.simpleExplanation}`;
+            }
+
+            updateHUD();
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < questions.length) {
+                updateHUD();
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-screen').classList.add('hidden');
+                document.getElementById('quiz-screen').classList.remove('flex');
+                const endScreen = document.getElementById('end-screen');
+                endScreen.classList.remove('hidden');
+                endScreen.classList.add('flex');
+                document.getElementById('final-score').textContent = score;
+                document.getElementById('final-correct').textContent = `${correctCount}/${questions.length}`;
+            }
+        }
+    </script>
+</body>
+</html>
